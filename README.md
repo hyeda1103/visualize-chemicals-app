@@ -14,7 +14,7 @@
 - Currently working on <b>visualizing the monitoring results of VOCs in feminine hygiene products.</b> The project uses public data as raw, which was officially released on December 30 last year by Ministry of Food and Drug Safety(MFDS). Anyone can access this data [on this page](https://www.mfds.go.kr/brd/m_99/view.do?seq=44922) and check the results of feminine hygiene products' quality monitoring.
 - Throughout the project, we attempts to find answers to following questions:<br />
   (1) Were MFDS's inspection standards appropriate? <br />
-  (2) How can we visualize the results of quality monitoring data to provide more comprehensive understanding about feminine hygiene products?
+  (2) How can we visualize the results to provide more comprehensive understanding about feminine hygiene products?
 - You can download the processed data by clicking the green "Clone or download" button above.
 
 ## Setup
