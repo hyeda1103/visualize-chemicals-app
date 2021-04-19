@@ -40,6 +40,7 @@ const SunIcon = styled(IoMdSunny)`
   padding: 1px;
   color: ${({ theme }) => theme.text};
   opacity: ${({ theme }) => (theme.mode === "light" ? "1" : "0")};
+  transition: 0.1s ease;
 `;
 
 const MoonIcon = styled(IoMdMoon)`
@@ -52,4 +53,5 @@ const MoonIcon = styled(IoMdMoon)`
   padding: 1px;
   color: ${({ theme }) => theme.text};
   opacity: ${({ theme }) => (theme.mode === "light" ? "0" : "1")};
+  transition: 0.1s ease;
 `;
