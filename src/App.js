@@ -1,6 +1,7 @@
 import React, { useEffect, Suspense, lazy } from "react";
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import ReactGA from "react-ga";
+import { connect } from "react-redux";
 
 import GlobalStyle from "./globalStyles";
 import LoadingPage from "./pages/loading";
@@ -29,4 +30,17 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  open: state.sidebar.open,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  openSideBar: () => {
+    console.log("open");
+  },
+  closeSideBar: () => {
+    console.log("close");
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

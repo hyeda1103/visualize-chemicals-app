@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import SideBar from "./SideBar";
+import { connect } from "react-redux";
 
-const Header = () => {
-  const [open, setOpen] = useState(false);
+import SideBar from "./SideBar";
+import { handleSideBar } from "./../modules/SideBar";
+
+const Header = ({ open, handleSideBar }) => {
   return (
     <>
       <Nav>
         {/* 햄버거 메뉴 */}
-        <StyledBurger open={open} onClick={() => setOpen(!open)}>
+        <StyledBurger open={open} onClick={handleSideBar}>
           <div />
           <div />
           <div />
@@ -21,7 +23,16 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default connect(
+  (state) => ({
+    open: state.sidebar.open,
+  }),
+  (dispatch) => ({
+    handleSideBar: () => {
+      dispatch(handleSideBar());
+    },
+  })
+)(Header);
 
 const Nav = styled.section`
   width: 100%;
