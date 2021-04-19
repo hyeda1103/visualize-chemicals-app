@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, Suspense, lazy } from "react";
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import ReactGA from "react-ga";
+
+import GlobalStyle from "./globalStyles";
+import LoadingPage from "./pages/loading";
+import ScrollToTop from "./ScrollToTop";
+import Header from "./components/Header";
+
+const Homepage = lazy(() => import("./pages/index"));
 
 function App() {
+  useEffect(() => {
+    ReactGA.initialize("UA-*********-*"); // Google Analytics 추적 ID
+    // 페이지 뷰 리포트
+    ReactGA.pageview(window.location.pathname);
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Suspense fallback={<LoadingPage />}>
+        <GlobalStyle />
+        <ScrollToTop />
+        <Header />
+        <Switch>
+          <Route exact path="/" component={Homepage} />
+        </Switch>
+      </Suspense>
+    </Router>
   );
 }
 
