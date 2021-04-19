@@ -18,7 +18,6 @@ const Header = ({ open, handleSideBar, themeToggler }) => {
           <div />
         </StyledBurger>
         {/* light, dark 모드 토글 */}
-
         <ThemeSwitch>
           <Toggle themeToggler={themeToggler} />
         </ThemeSwitch>
@@ -49,7 +48,7 @@ const Nav = styled.section`
   color: #f6f5f0;
   position: fixed;
   z-index: 1;
-  padding: 0 20px;
+  padding: 0 1%;
 `;
 
 const StyledBurger = styled.div`
@@ -103,7 +102,7 @@ const ThemeSwitch = styled.div`
   position: absolute;
   width: 44px;
   height: 100%;
-  right: 20px;
+  right: 1%;
   display: flex;
   align-items: center;
 `;

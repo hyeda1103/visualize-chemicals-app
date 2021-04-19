@@ -11,6 +11,7 @@ import Header from "./components/Header";
 import { handleSideBar } from "./modules/SideBar";
 
 const Homepage = lazy(() => import("./pages/index"));
+const VOCspage = lazy(() => import("./pages/VOCs"));
 
 function App({ open }) {
   const [theme, setTheme] = useState("light");
@@ -28,10 +29,11 @@ function App({ open }) {
         <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
           <GlobalStyle />
           <ScrollToTop />
-          <Header theme={theme} themeToggler={themeToggler} />
           <DimmedOut open={open} />
+          <Header theme={theme} themeToggler={themeToggler} />
           <Switch>
             <Route exact path="/" component={Homepage} />
+            <Route exact path="/VOCs" component={VOCspage} />
           </Switch>
         </ThemeProvider>
       </Suspense>

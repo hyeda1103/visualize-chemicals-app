@@ -4,10 +4,8 @@ import styled from "styled-components";
 const SideBar = ({ open }) => {
   return (
     <Nav open={open}>
-      <NavItem>생리용품 VOCs 검출 정보</NavItem>
-      <NavItem>생리용품 VOCs 검출 정보</NavItem>
-      <NavItem>생리용품 VOCs 검출 정보</NavItem>
-      <NavItem>생리용품 VOCs 검출 정보</NavItem>
+      <NavItem>2020 VOCs 검출 결과</NavItem>
+      <NavItem>2020 PCBs 검출 결과</NavItem>
     </Nav>
   );
 };
@@ -15,7 +13,6 @@ const SideBar = ({ open }) => {
 export default SideBar;
 
 const Nav = styled.section`
-  width: 300px;
   height: calc(100vh - 60px);
   top: 60px;
   transform: ${({ open }) => (open ? "translateX(0)" : "translateX(-100%)")};
@@ -28,8 +25,10 @@ const Nav = styled.section`
 `;
 
 const NavItem = styled.div`
-  font-size: 16px;
-  font-weight: 400;
-  padding: 5px 20px;
+  font-size: 18px;
+  font-weight: 300;
+  padding: 15px 20px;
   width: 100%;
+  letter-spacing: 1.4px;
+  cursor: pointer;
 `;
