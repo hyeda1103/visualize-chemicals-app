@@ -22,7 +22,7 @@ const Nav = styled.section`
   position: absolute;
   z-index: 1;
   padding: 20px;
-  background: #333;
+  background: #363537;
   color: #f6f5f0;
   transition: 0.6s ease;
 `;
