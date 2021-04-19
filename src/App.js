@@ -1,30 +1,39 @@
-import React, { useEffect, Suspense, lazy } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import ReactGA from "react-ga";
 import { connect } from "react-redux";
-
+import styled, { ThemeProvider } from "styled-components";
+import { lightTheme, darkTheme } from "./Theme";
 import GlobalStyle from "./globalStyles";
 import LoadingPage from "./pages/loading";
 import ScrollToTop from "./ScrollToTop";
 import Header from "./components/Header";
+import { handleSideBar } from "./modules/SideBar";
 
 const Homepage = lazy(() => import("./pages/index"));
 
-function App() {
+function App({ open }) {
+  const [theme, setTheme] = useState("light");
   useEffect(() => {
     ReactGA.initialize("UA-*********-*"); // Google Analytics 추적 ID
     // 페이지 뷰 리포트
     ReactGA.pageview(window.location.pathname);
   }, []);
+  const themeToggler = () => {
+    theme === "light" ? setTheme("dark") : setTheme("light");
+  };
   return (
     <Router>
       <Suspense fallback={<LoadingPage />}>
-        <GlobalStyle />
-        <ScrollToTop />
-        <Header />
-        <Switch>
-          <Route exact path="/" component={Homepage} />
-        </Switch>
+        <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+          <GlobalStyle />
+          <ScrollToTop />
+          <Header theme={theme} themeToggler={themeToggler} />
+          <DimmedOut open={open} />
+          <Switch>
+            <Route exact path="/" component={Homepage} />
+          </Switch>
+        </ThemeProvider>
       </Suspense>
     </Router>
   );
@@ -35,12 +44,19 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  openSideBar: () => {
-    console.log("open");
-  },
-  closeSideBar: () => {
-    console.log("close");
+  handleSideBar: () => {
+    dispatch(handleSideBar());
   },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+const DimmedOut = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: ${({ open }) => (open ? "#000000" : "#fff")};
+  opacity: ${({ open }) => (open ? "0.5" : "0")};
+`;

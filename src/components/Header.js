@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 
 import SideBar from "./SideBar";
+import Toggle from "./Toggle";
 import { handleSideBar } from "./../modules/SideBar";
 
-const Header = ({ open, handleSideBar }) => {
+const Header = ({ open, handleSideBar, themeToggler }) => {
   return (
     <>
       <Nav>
@@ -16,6 +17,11 @@ const Header = ({ open, handleSideBar }) => {
           <div />
           <div />
         </StyledBurger>
+        {/* light, dark 모드 토글 */}
+
+        <ThemeSwitch>
+          <Toggle themeToggler={themeToggler} />
+        </ThemeSwitch>
       </Nav>
       {/* 네비게이션 메뉴 */}
       <SideBar open={open} />
@@ -37,10 +43,12 @@ export default connect(
 const Nav = styled.section`
   width: 100%;
   height: 60px;
+  top: 0;
+  left: 0;
   background: #333;
   color: #f6f5f0;
   position: fixed;
-  z-index: 3;
+  z-index: 1;
   padding: 0 20px;
 `;
 
@@ -49,7 +57,6 @@ const StyledBurger = styled.div`
   height: 20px;
   cursor: pointer;
   position: absolute;
-  z-index: 3;
   top: 0;
   bottom: 0;
   margin: auto 0;
@@ -90,4 +97,13 @@ const StyledBurger = styled.div`
       width: 18px;
     }
   }
+`;
+
+const ThemeSwitch = styled.div`
+  position: absolute;
+  width: 44px;
+  height: 100%;
+  right: 20px;
+  display: flex;
+  align-items: center;
 `;
