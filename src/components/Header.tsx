@@ -1,17 +1,28 @@
 import React from "react";
 import styled from "styled-components";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../modules";
+import { handleSideBar } from "./../modules/sideBar";
 
 import SideBar from "./SideBar";
 import Toggle from "./Toggle";
-import { handleSideBar } from "./../modules/SideBar";
 
-const Header = ({ open, handleSideBar, themeToggler }) => {
+type Props = {
+  themeToggler: () => void;
+};
+
+const Header = ({ themeToggler }: Props) => {
+  // 상태를 조회합니다. 상태를 조회 할 때에는 state 의 타입을 RootState 로 지정해야합니다.
+  const open = useSelector((state: RootState) => state.sideBar.open);
+  const dispatch = useDispatch(); // 디스패치 함수를 가져옵니다
+  const onClick = () => {
+    dispatch(handleSideBar());
+  };
   return (
     <>
       <Nav>
         {/* 햄버거 메뉴 */}
-        <StyledBurger open={open} onClick={handleSideBar}>
+        <StyledBurger open={open} onClick={onClick}>
           <div />
           <div />
           <div />
@@ -28,16 +39,7 @@ const Header = ({ open, handleSideBar, themeToggler }) => {
   );
 };
 
-export default connect(
-  (state) => ({
-    open: state.sidebar.open,
-  }),
-  (dispatch) => ({
-    handleSideBar: () => {
-      dispatch(handleSideBar());
-    },
-  })
-)(Header);
+export default Header;
 
 const Nav = styled.section`
   width: 100%;
@@ -51,7 +53,11 @@ const Nav = styled.section`
   padding: 0 1%;
 `;
 
-const StyledBurger = styled.div`
+type BurgerProps = {
+  open: boolean;
+};
+
+const StyledBurger = styled.div<BurgerProps>`
   width: 30px;
   height: 20px;
   cursor: pointer;

@@ -3,7 +3,11 @@ import { func } from "prop-types";
 import styled from "styled-components";
 import { IoMdSunny, IoMdMoon } from "react-icons/io";
 
-const Toggle = ({ themeToggler }) => {
+type Props = {
+  themeToggler: () => void;
+};
+
+const Toggle = ({ themeToggler }: Props) => {
   return (
     <ToggleContainer onClick={themeToggler}>
       <SunIcon />

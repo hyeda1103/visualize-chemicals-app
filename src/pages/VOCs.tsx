@@ -1,5 +1,5 @@
 import React from "react";
-import Main from "./../components/VOCs";
+import Main from "../components/VOCs";
 
 const index = () => {
   return (

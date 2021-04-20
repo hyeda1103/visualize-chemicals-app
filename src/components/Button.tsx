@@ -1,7 +1,12 @@
 import styled from "styled-components/macro";
 import { Link } from "react-router-dom";
 
-export const Button = styled(Link)`
+type Props = {
+  prev?: boolean;
+  big?: boolean;
+};
+
+export const Button = styled(Link)<Props>`
   background: ${({ prev }) => (prev ? "rgba(0, 0, 0, 0)" : "#fff")};
   border: ${({ prev }) => (prev ? "1px solid #AAAAAA" : "1px solid #fff")};
   cursor: pointer;

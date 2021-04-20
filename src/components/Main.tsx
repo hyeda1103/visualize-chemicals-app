@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components/macro";
-import { Button } from "./Button";
 
 const Main = () => {
   return (
@@ -9,8 +8,6 @@ const Main = () => {
         <TitleWrapper>
           <h1>내가 사용하는 생리용품에서 검출되었다, 무엇?</h1>
         </TitleWrapper>
-
-        <Button to="/VOCs">검사 결과 보기</Button>
       </Inner>
     </Section>
   );
