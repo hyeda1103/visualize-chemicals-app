@@ -15,11 +15,11 @@ const SideBar = ({ open }: Props) => {
   };
   return (
     <Nav open={open}>
-      <NavItem to="/VOCs" onClick={onClick}>
-        2021 여름 생리용품
-      </NavItem>
       <NavItem to="/" onClick={onClick}>
         홈으로
+      </NavItem>
+      <NavItem to="/VOCs" onClick={onClick}>
+        2021 여름 생리용품
       </NavItem>
     </Nav>
   );
