@@ -58,4 +58,5 @@ const DimmedOut = styled.div<Props>`
   height: 100vh;
   background: ${({ open }) => (open ? "#000000" : "#fff")};
   opacity: ${({ open }) => (open ? "0.6" : "0")};
+  display: ${({ open }) => (open ? "flex" : "none")};
 `;

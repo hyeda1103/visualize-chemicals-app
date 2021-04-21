@@ -24,10 +24,14 @@ const VOCs = () => {
   return (
     <Section>
       <Inner>
-        <TitleWrapper>
-          <h1>내가 사용하는 생리용품에서 검출되었다, 무엇?</h1>
-        </TitleWrapper>
-        <SelectBox data={VOCsData} />
+        <Column>
+          <TitleWrapper>
+            <Title>
+              생리용품 <Box>VOCs</Box> 검출결과
+            </Title>
+          </TitleWrapper>
+          <SelectBox data={VOCsData} />
+        </Column>
       </Inner>
     </Section>
   );
@@ -40,14 +44,35 @@ const Section = styled.section`
 `;
 
 const Inner = styled.div`
-  width: 80%;
+  width: 960px;
   margin: 0 auto;
-  height: 100vh;
-  padding: 64px 0;
+  padding: 112px 0;
+`;
+
+const Column = styled.div`
+  padding: 40px 0;
 `;
 
 const TitleWrapper = styled.div`
-  h1 {
-    font-size: 70px;
+  text-align: center;
+`;
+
+const Title = styled.div`
+  font-size: 70px;
+  font-weight: 700;
+`;
+
+const Box = styled.span`
+  padding: 0 30px;
+  border: 3px solid ${({ theme }: any) => theme.text};
+  background: ${({ theme }: any) => theme.body};
+  color: ${({ theme }: any) => theme.text};
+  cursor: pointer;
+  border-radius: 10px;
+  transition: 0.6s ease;
+
+  &:hover {
+    color: ${({ theme }: any) => theme.body};
+    background: ${({ theme }: any) => theme.text};
   }
 `;

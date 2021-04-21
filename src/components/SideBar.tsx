@@ -27,6 +27,12 @@ const SideBar = ({ open }: Props) => {
       <NavItem to="/" onClick={onClick}>
         일회용과 다회용 검출 결과 비교
       </NavItem>
+      <NavItem to="/" onClick={onClick}>
+        검출 실험 방법에 따른 결과 비교
+      </NavItem>
+      <NavItem to="/" onClick={onClick}>
+        단체별 검출 실험 결과 비교
+      </NavItem>
     </Nav>
   );
 };

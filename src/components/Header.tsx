@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+// 리덕스
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../modules";
 import { handleSideBar } from "./../modules/sideBar";
-
+// 메뉴 컴포넌트
 import SideBar from "./SideBar";
 import Toggle from "./Toggle";
 

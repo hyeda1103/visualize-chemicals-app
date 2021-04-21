@@ -6,7 +6,8 @@ const Main = () => {
     <Section>
       <Inner>
         <TitleWrapper>
-          <h1>내가 사용하는 생리용품에서 검출되었다, 무엇?</h1>
+          <h1>성분의 시각화</h1>
+          <h1>생리용품에 대한 질문들 타이머 함수로 띄우기</h1>
         </TitleWrapper>
       </Inner>
     </Section>
@@ -23,7 +24,7 @@ const Inner = styled.div`
   width: 80%;
   margin: 0 auto;
   height: 100vh;
-  padding: 64px 0;
+  padding: 96px 0;
 `;
 
 const TitleWrapper = styled.div`

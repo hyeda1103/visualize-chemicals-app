@@ -7,28 +7,40 @@ const customStyles = {
   control: (provided: any, state: any) => ({
     ...provided,
     background: "#fff",
-    borderColor: "#9e9e9e",
-    minHeight: "45px",
-    height: "45px",
-    boxShadow: state.isFocused ? null : null,
+    fontSize: "20px",
+    borderColor: `${({ theme }: any) => theme.text}`,
+    color: "#363537",
+    minHeight: "50px",
+    height: "50px",
+  }),
+  // 드롭다운 메뉴
+  option: (provided: any) => ({
+    ...provided,
+    color: "#363537",
+    fontSize: "16px",
+    padding: "10px 16px",
+    overflow: "hidden",
+  }),
+
+  singleValue: (provided: any) => ({
+    ...provided,
+    color: "#363537",
   }),
 
   valueContainer: (provided: any) => ({
     ...provided,
-    height: "45px",
-    padding: "0 6px",
+    height: "50px",
+    padding: "0 12px",
   }),
 
   input: (provided: any) => ({
     ...provided,
     margin: "0px",
-  }),
-  indicatorSeparator: () => ({
-    display: "none",
+    color: "#363537",
   }),
   indicatorsContainer: (provided: any) => ({
     ...provided,
-    height: "45px",
+    height: "50px",
   }),
 };
 
@@ -38,66 +50,66 @@ type DataProps = {
   usage: string;
   company: string;
   productName: string;
-  Ethylbenzene: string;
-  Undecane: string;
-  Styrene: string;
-  Nonanal: string;
-  Chloroform: string;
-  Decanal: string;
-  Trichloroethylene: string;
-  Hexachlorobutadiene: string;
+  에틸벤젠: string;
+  운데칸: string;
+  스티렌: string;
+  노나날: string;
+  클로로포름: string;
+  데카날: string;
+  트리클로로에틸렌: string;
+  헥사클로로부타디엔: string;
   Dichloromethane: string;
-  "1,2-Dichloroethane": string;
-  Benzene: string;
-  Bromodichloromethane: string;
-  Toluene: string;
-  "1,4-Dichlorobenzene": string;
-  "Xylene(p-, m-, o-)": string;
-  Naphthalene: string;
-  Hexane: string;
-  "(-)-alpha-Pinene": string;
-  Tetrachloroehtylene: string;
-  "(-)-beta-Pinene": string;
-  "2-Propanol": "0.492";
-  "2-Ethyltoluene": string;
-  "2-Butanone": string;
-  "3-Ethyltoluene": string;
-  Ethylacetate: string;
-  "4-Ethyltoluene": string;
-  Isooctane: string;
-  "1,2,3-Trimethylbenzene": string;
-  "4-Methyl-2-Pentanone": string;
-  "1,2,4-Trimethylbenzene": string;
-  Octane: string;
-  "1,3,5-Trimethylbenzene": string;
-  "1,1,2-Trichloroethane": string;
-  "1,2-Dichloropropane": string;
-  "1,3-Dichloropropane": string;
-  Carbontetrachloride: string;
-  Butylacetate: string;
-  "2,4-Dimethylpentane": string;
-  Chlorobenzene: string;
-  "1,2,4,5-Tetramethylbenzene": string;
-  Nonane: string;
-  Dodecane: string;
-  Cumene: string;
-  Tridecane: string;
-  Propylbenzene: string;
-  Tetradecane: string;
-  Decane: string;
-  "n-Pentadecane": string;
-  sec_Butylbenzene: string;
-  "n-Hexadecane": string;
-  "R-(+)-Limonene": string;
-  Ethanol: string;
-  "p-Cymene": string;
-  Acetone: string;
-  "1,2,3-Trichlorobenzene": string;
-  "1-Propanol": string;
-  "n-Butylbenzene": string;
-  Heptane: string;
-  "1,2-Dichlorobenzene": string;
-  "1-Butanol": string;
+  "1,2-디클로로에탄": string;
+  벤젠: string;
+  브로모디클로로메탄: string;
+  톨루엔: "0.12";
+  "1,4-디클로로벤젠": string;
+  "(p-, m-, o-)자일렌": string;
+  나프탈렌: string;
+  헥산: string;
+  "(1S)-(-)-알파-피넨": string;
+  테트라클로로에틸렌: string;
+  "(-)-베타-피넨": string;
+  "2-프로판올": string;
+  "2-에틸톨루엔": string;
+  "2-부타논": string;
+  "3-에틸톨루엔": string;
+  에틸아세테이트: string;
+  "4-에틸톨루엔": string;
+  이소옥탄: string;
+  "1,2,3-트리메틸벤젠": string;
+  "4-메틸-2-펜타논": string;
+  "1,2,4-트리메틸벤젠": string;
+  옥탄: string;
+  "1,3,5-트리메틸벤젠": string;
+  "1,1,2-트리클로로에탄": string;
+  "1,2-디클로로프로판": string;
+  "1,3-디클로로프로판": string;
+  사염화탄소: string;
+  부틸아세테이트: string;
+  "2,4-디메틸펜탄": string;
+  클로로벤젠: string;
+  "1,2,4,5-테트라메틸벤젠": string;
+  노난: string;
+  도데칸: string;
+  쿠멘: string;
+  트리데칸: string;
+  프로필벤젠: string;
+  테트라데칸: string;
+  데칸: string;
+  "n-펜타데칸": string;
+  "sec-부틸벤젠": string;
+  "n-헥사데칸": string;
+  "(R)-(+)-리모넨": string;
+  에탄올: string;
+  "p-시멘": string;
+  아세톤: string;
+  "1,2,3-트리클로로벤젠": string;
+  "1-프로판올": string;
+  "n-부틸벤젠": string;
+  헵탄: string;
+  "1,2-디클로로벤젠": string;
+  "1-부탄올": string;
 };
 
 type Props = {
@@ -163,12 +175,17 @@ const SelectBox = ({ data }: Props) => {
     setSelectedProduct(e.label);
   };
 
+  const focusDistribution = (e: any) => {
+    CompanyOption = [];
+  };
+
   return (
     <>
       <SelectWrapper>
         <ReactSelect
           options={DistributionOption}
           onChange={handleDistribution}
+          onFocus={focusDistribution}
           noOptionsMessage={() => null}
           placeholder="유통 선택"
           menuPortalTarget={document.querySelector("body")}
@@ -178,8 +195,8 @@ const SelectBox = ({ data }: Props) => {
             borderRadius: 5,
             colors: {
               ...theme.colors,
-              primary25: "#FF8A00",
-              primary: "#FF8A00",
+              primary25: "#999",
+              primary: "#999",
             },
           })}
         />
@@ -196,8 +213,8 @@ const SelectBox = ({ data }: Props) => {
             borderRadius: 5,
             colors: {
               ...theme.colors,
-              primary25: "#FF8A00",
-              primary: "#FF8A00",
+              primary25: "#999",
+              primary: "#999",
             },
           })}
         />
@@ -214,13 +231,13 @@ const SelectBox = ({ data }: Props) => {
             borderRadius: 5,
             colors: {
               ...theme.colors,
-              primary25: "#FF8A00",
-              primary: "#FF8A00",
+              primary25: "#999",
+              primary: "#999",
             },
           })}
         />
       </SelectWrapper>
-      <Result searchResult={selectedProductInfo[0]} />
+      <Result data={data} searchResult={selectedProductInfo[0]} />
     </>
   );
 };
@@ -229,7 +246,8 @@ export default SelectBox;
 
 const SelectWrapper = styled.div`
   display: grid;
-  width: 720px;
-  column-gap: 10px;
-  grid-template-columns: 200px 200px 200px;
+  column-gap: 16px;
+  grid-template-columns: repeat(3, 250px);
+  margin: 80px 0;
+  justify-content: center;
 `;
