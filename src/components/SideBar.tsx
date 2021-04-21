@@ -31,7 +31,7 @@ const Nav = styled.section<Props>`
   height: calc(100vh - 60px);
   top: 60px;
   transform: ${({ open }) => (open ? "translateX(0)" : "translateX(-100%)")};
-  position: absolute;
+  position: fixed;
   z-index: 3;
   padding: 20px;
   background: #363537;

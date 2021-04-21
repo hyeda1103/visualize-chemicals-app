@@ -82,7 +82,7 @@ type Props = {
 };
 
 const DimmedOut = styled.div<Props>`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
