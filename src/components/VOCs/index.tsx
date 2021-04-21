@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
 import SelectBox from "./Select";
 
-const VOCs = () => {
+type Props = {
+  close: boolean;
+  clickToSearch: any;
+};
+
+const VOCs = ({ close, clickToSearch }: Props) => {
   const [VOCsData, setVOCsData] = useState([]);
   const getData = () => {
     fetch("/data/2020_VOCs_data_385.json", {
@@ -21,16 +26,17 @@ const VOCs = () => {
   useEffect(() => {
     getData();
   }, []);
+
   return (
     <Section>
-      <Inner>
+      <Inner close={close}>
         <Column>
           <TitleWrapper>
             <Title>
-              생리용품 <Box>VOCs</Box> 검출결과
+              생리용품 <Box onClick={clickToSearch}>VOCs</Box> 검출결과
             </Title>
           </TitleWrapper>
-          <SelectBox data={VOCsData} />
+          <SelectBox clickToSearch={clickToSearch} data={VOCsData} />
         </Column>
       </Inner>
     </Section>
@@ -43,9 +49,14 @@ const Section = styled.section`
   width: 100%;
 `;
 
-const Inner = styled.div`
-  width: 960px;
+type StyleProps = {
+  close: boolean;
+};
+
+const Inner = styled.div<StyleProps>`
+  width: ${({ close }) => (close ? "960px" : "70%")};
   margin: 0 auto;
+  position: ${({ close }) => (close ? "relative" : "absolute")};
   padding: 112px 0;
 `;
 

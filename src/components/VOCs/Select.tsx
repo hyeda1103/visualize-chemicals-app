@@ -113,10 +113,11 @@ type DataProps = {
 };
 
 type Props = {
+  clickToSearch: any;
   data: DataProps[];
 };
 
-const SelectBox = ({ data }: Props) => {
+const SelectBox = ({ clickToSearch, data }: Props) => {
   const [selectedDistribution, setSelectedDistribution] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -195,8 +196,6 @@ const SelectBox = ({ data }: Props) => {
             borderRadius: 5,
             colors: {
               ...theme.colors,
-              primary25: "#999",
-              primary: "#999",
             },
           })}
         />
@@ -213,8 +212,6 @@ const SelectBox = ({ data }: Props) => {
             borderRadius: 5,
             colors: {
               ...theme.colors,
-              primary25: "#999",
-              primary: "#999",
             },
           })}
         />
@@ -231,13 +228,15 @@ const SelectBox = ({ data }: Props) => {
             borderRadius: 5,
             colors: {
               ...theme.colors,
-              primary25: "#999",
-              primary: "#999",
             },
           })}
         />
       </SelectWrapper>
-      <Result data={data} searchResult={selectedProductInfo[0]} />
+      <Result
+        clickToSearch={clickToSearch}
+        data={data}
+        searchResult={selectedProductInfo[0]}
+      />
     </>
   );
 };

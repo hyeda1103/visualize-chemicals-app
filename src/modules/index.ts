@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
 import sideBar from "./sideBar";
+import dictionary from "./dictionary";
 
 const rootReducer = combineReducers({
   sideBar,
+  dictionary,
 });
 
 // 루트 리듀서를 내보내기

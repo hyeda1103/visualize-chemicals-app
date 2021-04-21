@@ -50,7 +50,7 @@ const Nav = styled.section`
   background: #363537;
   color: #f6f5f0;
   position: fixed;
-  z-index: 1;
+  z-index: 3;
   padding: 0 1%;
 `;
 

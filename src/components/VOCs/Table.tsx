@@ -77,9 +77,10 @@ type StringObj = {
 type Props = {
   data: DataProps[];
   chemicalInfo: StringObj | undefined;
+  clickToSearch: any;
 };
 
-const Table = ({ data, chemicalInfo }: Props) => {
+const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
   const [chemicalList, setChemicalList] = useState<string[]>([]);
   // const [table, setTable] = useState<StringObj[]>([]);
   let table: StringObj[][] = [];
@@ -162,22 +163,22 @@ const Table = ({ data, chemicalInfo }: Props) => {
       <Row>
         <TH>VOCs</TH>
         <TD>
-          <Box>검출량</Box>
+          <Box onClick={clickToSearch}>검출량</Box>
         </TD>
         <TD>
-          <Box>평균</Box>
+          <Box onClick={clickToSearch}>평균</Box>
         </TD>
         <TD>
-          <Box>중앙값</Box>
+          <Box onClick={clickToSearch}>중앙값</Box>
         </TD>
         <TD>
-          <Box>표준편차</Box>
+          <Box onClick={clickToSearch}>표준편차</Box>
         </TD>
         <TD>
-          <Box>최솟값</Box>
+          <Box onClick={clickToSearch}>최솟값</Box>
         </TD>
         <TD>
-          <Box>최댓값</Box>
+          <Box onClick={clickToSearch}>최댓값</Box>
         </TD>
       </Row>
       {table
@@ -185,7 +186,7 @@ const Table = ({ data, chemicalInfo }: Props) => {
             row.map((el) => (
               <Row key={el.chemicalName}>
                 <TH>
-                  <Box>{el.chemicalName}</Box>
+                  <Box onClick={clickToSearch}>{el.chemicalName}</Box>
                 </TH>
                 <TD>{el.target}</TD>
                 <TD>{el.mean}</TD>
@@ -210,11 +211,12 @@ const GridContainer = styled.section`
 `;
 
 const Row = styled.div`
-  width: 840px;
+  width: 960px;
   display: grid;
   grid-template-columns: repeat(7, auto);
   border-bottom: 1px solid ${({ theme }) => theme.text};
   box-sizing: border-box;
+  margin: 0 auto;
 
   &:last-child {
     border-bottom: 0;
@@ -225,7 +227,7 @@ const TH = styled.div`
   font-size: 18px;
   padding: 10px;
   text-align: flex-start;
-  width: 180px;
+  width: 240px;
   box-sizing: border-box;
   border-right: 1px solid ${({ theme }) => theme.text};
 `;
@@ -234,7 +236,7 @@ const TD = styled.div`
   font-size: 18px;
   padding: 10px;
   text-align: center;
-  width: calc((840px - 180px) / 6);
+  width: calc((960px - 240px) / 6);
   border-right: 1px solid ${({ theme }) => theme.text};
   box-sizing: border-box;
 

@@ -16,22 +16,10 @@ const SideBar = ({ open }: Props) => {
   return (
     <Nav open={open}>
       <NavItem to="/VOCs" onClick={onClick}>
-        2020 생리용품별 VOCs 검출 결과
+        2021 여름 생리용품
       </NavItem>
       <NavItem to="/" onClick={onClick}>
-        2020 생리용품별 PCBs 검출 결과
-      </NavItem>
-      <NavItem to="/" onClick={onClick}>
-        국내유통 및 해외직구 검출 결과 비교
-      </NavItem>
-      <NavItem to="/" onClick={onClick}>
-        일회용과 다회용 검출 결과 비교
-      </NavItem>
-      <NavItem to="/" onClick={onClick}>
-        검출 실험 방법에 따른 결과 비교
-      </NavItem>
-      <NavItem to="/" onClick={onClick}>
-        단체별 검출 실험 결과 비교
+        홈으로
       </NavItem>
     </Nav>
   );
@@ -44,7 +32,7 @@ const Nav = styled.section<Props>`
   top: 60px;
   transform: ${({ open }) => (open ? "translateX(0)" : "translateX(-100%)")};
   position: absolute;
-  z-index: 1;
+  z-index: 3;
   padding: 20px;
   background: #363537;
   transition: 0.6s ease;

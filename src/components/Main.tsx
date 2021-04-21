@@ -1,13 +1,19 @@
 import React from "react";
 import styled from "styled-components/macro";
 
-const Main = () => {
+type Props = {
+  clickToSearch: any;
+};
+
+const Main = ({ clickToSearch }: Props) => {
   return (
     <Section>
       <Inner>
         <TitleWrapper>
-          <h1>성분의 시각화</h1>
-          <h1>생리용품에 대한 질문들 타이머 함수로 띄우기</h1>
+          <Series>2021 여름호</Series>
+          <Title>
+            <Box onClick={clickToSearch}>생리용품</Box>에 대하여
+          </Title>
         </TitleWrapper>
       </Inner>
     </Section>
@@ -29,7 +35,32 @@ const Inner = styled.div`
 
 const TitleWrapper = styled.div`
   margin-bottom: 80px;
-  h1 {
-    font-size: 70px;
+`;
+
+const Series = styled.h1`
+  font-size: 80px;
+`;
+
+const Title = styled.h1`
+  font-size: 120px;
+  line-height: 120px;
+  margin: 80px 0;
+`;
+
+const Box = styled.span`
+  margin: 0 50px 0 0;
+  padding: 20px 80px;
+  background: ${({ theme }: any) => theme.text};
+  color: ${({ theme }: any) => theme.body};
+  cursor: pointer;
+  border-radius: 10px;
+  transition: 0.6s ease;
+  box-sizing: border-box;
+  border: 3px solid ${({ theme }: any) => theme.text};
+
+  &:hover {
+    color: ${({ theme }: any) => theme.text};
+    background: ${({ theme }: any) => theme.body};
+    border: 3px solid ${({ theme }: any) => theme.text};
   }
 `;
