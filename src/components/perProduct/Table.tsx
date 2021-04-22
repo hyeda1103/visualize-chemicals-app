@@ -139,7 +139,7 @@ const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
 
       if (chemicalInfo) {
         Object.entries(chemicalInfo).map((arr) =>
-          arr[0] === chemical ? (target += arr[1]) : null
+          arr[0] === chemical ? (target += Number(arr[1]).toFixed(2)) : null
         );
       }
 
