@@ -83,7 +83,6 @@ type Props = {
 const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
   const [chemicalList, setChemicalList] = useState<string[]>([]);
   let table: StringObj[][] = [];
-  let row: StringObj[] = [];
 
   useEffect(() => {
     if (chemicalInfo) {
@@ -111,14 +110,14 @@ const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
         .reduce((acc, curr, i, { length }) => {
           return i === length - 1 ? (acc + curr) / length : acc + curr;
         }, 0)
-        .toFixed(3);
+        .toFixed(2);
 
       // 해당 화학물질에 대한 중앙값 계산
       let median = (
         (detectedPerProduct[Math.floor(detectedPerProduct.length / 2)] +
           detectedPerProduct[Math.ceil(detectedPerProduct.length / 2)]) /
         2
-      ).toFixed(3);
+      ).toFixed(2);
 
       // 해당 화학물질에 대한 표준편차 계산
       let SD = Math.sqrt(
@@ -127,32 +126,32 @@ const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
           .reduce((acc, curr, i, { length }) => {
             return i === length - 1 ? (acc + curr) / length : acc + curr;
           }, 0)
-      ).toFixed(3);
+      ).toFixed(2);
 
       // 해당 화학물질에 대한 최솟값 계산
-      let min = Math.min(...detectedPerProduct).toFixed(3);
+      let min = Math.min(...detectedPerProduct).toFixed(2);
 
       // 해당 화학물질에 대한 최댓값 계산
-      let max = Math.max(...detectedPerProduct).toFixed(3);
+      let max = Math.max(...detectedPerProduct).toFixed(2);
 
-      let resultObj: StringObj = {};
+      // 사용자가 선택한 제품에서 검출된 해당 화학물질의 검출량
+      let target = "";
 
       if (chemicalInfo) {
         Object.entries(chemicalInfo).map((arr) =>
-          arr[0] === chemical ? (resultObj["target"] = arr[1]) : null
+          arr[0] === chemical ? (target += arr[1]) : null
         );
       }
 
-      resultObj["chemicalName"] = chemical;
-      resultObj["mean"] = mean;
-      resultObj["median"] = median;
-      resultObj["SD"] = SD;
-      resultObj["min"] = min;
-      resultObj["max"] = max;
-
-      let newRow = row.concat(resultObj);
-
-      return newRow;
+      return {
+        chemicalName: chemical,
+        target: target,
+        mean: mean,
+        median: median,
+        SD: SD,
+        min: min,
+        max: max,
+      };
     });
     table.push(tableInfo.flat());
   }
@@ -228,6 +227,7 @@ const TH = styled.div`
   text-align: flex-start;
   width: 240px;
   box-sizing: border-box;
+  line-height: 2;
   border-right: 1px solid ${({ theme }) => theme.text};
 `;
 

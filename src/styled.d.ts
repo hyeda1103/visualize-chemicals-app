@@ -8,5 +8,6 @@ declare module "styled-components" {
     text: string;
     background: string;
     mode: string;
+    tableBorder: string;
   }
 }

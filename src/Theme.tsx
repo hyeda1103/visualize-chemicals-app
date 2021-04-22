@@ -5,6 +5,7 @@ export const lightTheme: DefaultTheme = {
   text: "#363537",
   background: "#FAFAFA",
   mode: "light",
+  tableBorder: "#36353750",
 };
 
 export const darkTheme: DefaultTheme = {
@@ -12,4 +13,5 @@ export const darkTheme: DefaultTheme = {
   text: "#FAFAFA",
   background: "#999",
   mode: "dark",
+  tableBorder: "#FAFAFA50",
 };
