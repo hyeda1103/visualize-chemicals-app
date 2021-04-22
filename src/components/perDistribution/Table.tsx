@@ -75,7 +75,6 @@ type Props = {
 };
 
 const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
-  console.log(detectedInBoth);
   let table = detectedInBoth.map((chemical) => {
     let domestic: number[] = [];
     let overseas: number[] = [];
