@@ -170,9 +170,8 @@ const Result = ({ data, clickToSearch }: Props) => {
         검출된 것으로 나타났다.
       </Paragraph>
       <TableTitle onClick={handleToggle}>
-        <Toggle onClick={handleToggle} show={show} /> [표] 일회용 생리용품과
-        다회용 생리용품에서 모두 검출된 {DetectedInBoth.length}종의 VOCs에 대한
-        통계
+        <Toggle onClick={handleToggle} show={show} /> [표] 일회용과 다회용
+        생리용품에서 모두 검출된 {DetectedInBoth.length}종의 VOCs에 대한 통계
       </TableTitle>
       <TableBody show={show}>
         <Table
