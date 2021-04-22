@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-
 type DataProps = {
   index: number;
   distribution: string;
@@ -69,94 +68,14 @@ type DataProps = {
   "1-부탄올": string;
 };
 
-// Indexable Types 설정
-type StringObj = {
-  [index: string]: string | number;
-};
-
 type Props = {
   data: DataProps[];
-  chemicalInfo: StringObj | undefined;
+  detectedInBoth: string[];
   clickToSearch: any;
 };
 
-const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
-  const [chemicalList, setChemicalList] = useState<string[]>([]);
-  // const [table, setTable] = useState<StringObj[]>([]);
-  let table: StringObj[][] = [];
-  let row: StringObj[] = [];
-
-  useEffect(() => {
-    if (chemicalInfo) {
-      setChemicalList(Object.keys(chemicalInfo));
-    }
-  }, [chemicalInfo]);
-
-  // 검출된 화학물질에 대한 통계수치 계산
-  if (chemicalList) {
-    let tableInfo = chemicalList.map((chemical) => {
-      let detectedPerProduct: number[] = [];
-
-      // 모든 생리용품에 대한 화학물질 검출량 추출
-      Object.entries(data).map((product) => {
-        return Object.entries(product[1]).map((arr) =>
-          arr[0] === chemical ? detectedPerProduct.push(Number(arr[1])) : null
-        );
-      });
-
-      // 오름차순으로 정렬
-      detectedPerProduct.sort((a, b) => a - b);
-
-      // 해당 화학물질에 대한 평균값 계산
-      let mean = detectedPerProduct
-        .reduce((acc, curr, i, { length }) => {
-          return i === length - 1 ? (acc + curr) / length : acc + curr;
-        }, 0)
-        .toFixed(3);
-
-      // 해당 화학물질에 대한 중앙값 계산
-      let median = (
-        (detectedPerProduct[Math.floor(detectedPerProduct.length / 2)] +
-          detectedPerProduct[Math.ceil(detectedPerProduct.length / 2)]) /
-        2
-      ).toFixed(3);
-
-      // 해당 화학물질에 대한 표준편차 계산
-      let SD = Math.sqrt(
-        detectedPerProduct
-          .map((x) => Math.pow(x - Number(mean), 2))
-          .reduce((acc, curr, i, { length }) => {
-            return i === length - 1 ? (acc + curr) / length : acc + curr;
-          }, 0)
-      ).toFixed(3);
-
-      // 해당 화학물질에 대한 최솟값 계산
-      let min = Math.min(...detectedPerProduct).toFixed(3);
-
-      // 해당 화학물질에 대한 최댓값 계산
-      let max = Math.max(...detectedPerProduct).toFixed(3);
-
-      let resultObj: StringObj = {};
-
-      if (chemicalInfo) {
-        Object.entries(chemicalInfo).map((arr) =>
-          arr[0] === chemical ? (resultObj["target"] = arr[1]) : null
-        );
-      }
-
-      resultObj["chemicalName"] = chemical;
-      resultObj["mean"] = mean;
-      resultObj["median"] = median;
-      resultObj["SD"] = SD;
-      resultObj["min"] = min;
-      resultObj["max"] = max;
-
-      let newRow = row.concat(resultObj);
-
-      return newRow;
-    });
-    table.push(tableInfo.flat());
-  }
+const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
+  console.log(detectedInBoth);
 
   return (
     <GridContainer>
@@ -181,23 +100,6 @@ const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
           <Box onClick={clickToSearch}>최댓값</Box>
         </TD>
       </Row>
-      {table
-        ? table.map((row) =>
-            row.map((el) => (
-              <Row key={el.chemicalName}>
-                <TH>
-                  <Box onClick={clickToSearch}>{el.chemicalName}</Box>
-                </TH>
-                <TD>{el.target}</TD>
-                <TD>{el.mean}</TD>
-                <TD>{el.median}</TD>
-                <TD>{el.SD}</TD>
-                <TD>{el.min}</TD>
-                <TD>{el.max}</TD>
-              </Row>
-            ))
-          )
-        : null}
     </GridContainer>
   );
 };

@@ -12,8 +12,8 @@ import LoadingPage from "./pages/loading";
 import ScrollToTop from "./ScrollToTop";
 import Header from "./components/Header";
 import Dictionary from "./components/Dictionary";
-import Homepage from "./components/Main";
-import VOCsPage from "./components/VOCs";
+import Homepage from "./pages";
+import VOCsPage from "./pages/VOCs";
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState("light");

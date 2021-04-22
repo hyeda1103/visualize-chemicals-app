@@ -1,5 +1,6 @@
 import React from "react";
-import Main from "../components/VOCs";
+import VOCsPerProduct from "../components/perProduct";
+import VOCsPerUsage from "../components/perUsage";
 
 type Props = {
   close: boolean;
@@ -9,7 +10,8 @@ type Props = {
 const index = ({ close, clickToSearch }: Props) => {
   return (
     <>
-      <Main close={close} clickToSearch={clickToSearch} />
+      <VOCsPerProduct close={close} clickToSearch={clickToSearch} />
+      <VOCsPerUsage close={close} clickToSearch={clickToSearch} />
     </>
   );
 };

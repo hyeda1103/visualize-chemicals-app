@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
-import SelectBox from "./Select";
+import Result from "./Result";
 
 type Props = {
   close: boolean;
-  clickToSearch: any;
+  clickToSearch: string;
 };
 
 const VOCs = ({ close, clickToSearch }: Props) => {
@@ -32,11 +32,9 @@ const VOCs = ({ close, clickToSearch }: Props) => {
       <Inner close={close}>
         <Column>
           <TitleWrapper>
-            <Title>
-              생리용품 <Box onClick={clickToSearch}>VOCs</Box> 검출결과
-            </Title>
+            <Title>일회용 vs 다회용</Title>
           </TitleWrapper>
-          <SelectBox clickToSearch={clickToSearch} data={VOCsData} />
+          <Result clickToSearch={clickToSearch} data={VOCsData} />
         </Column>
       </Inner>
     </Section>
@@ -55,8 +53,8 @@ type StyleProps = {
 
 const Inner = styled.div<StyleProps>`
   width: ${({ close }) => (close ? "960px" : "70%")};
-  margin: 0 auto;
-  position: ${({ close }) => (close ? "relative" : "absolute")};
+  margin: ${({ close }) => (close ? "0 auto" : "0")};
+  position: relative;
   padding: 112px 0;
 `;
 
@@ -71,19 +69,4 @@ const TitleWrapper = styled.div`
 const Title = styled.div`
   font-size: 70px;
   font-weight: 700;
-`;
-
-const Box = styled.span`
-  padding: 0 30px;
-  border: 3px solid ${({ theme }: any) => theme.text};
-  background: ${({ theme }: any) => theme.body};
-  color: ${({ theme }: any) => theme.text};
-  cursor: pointer;
-  border-radius: 10px;
-  transition: 0.6s ease;
-
-  &:hover {
-    color: ${({ theme }: any) => theme.body};
-    background: ${({ theme }: any) => theme.text};
-  }
 `;
