@@ -75,15 +75,16 @@ type Props = {
 };
 
 const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
+  console.log(detectedInBoth);
   let table = detectedInBoth.map((chemical) => {
-    let disposable: number[] = [];
-    let reusable: number[] = [];
+    let domestic: number[] = [];
+    let overseas: number[] = [];
     data.map((product) => {
-      if (product.usage === "일회용") {
+      if (product.distribution === "국내유통") {
         let arr = Object.entries(product);
         arr.map((el) => {
           if (el[0] === chemical && el[1] !== "0") {
-            disposable.push(Number(el[1]));
+            domestic.push(Number(el[1]));
           }
           return el;
         });
@@ -91,91 +92,92 @@ const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
         let arr = Object.entries(product);
         arr.map((el) => {
           if (el[0] === chemical && el[1] !== "0") {
-            reusable.push(Number(el[1]));
+            overseas.push(Number(el[1]));
           }
           return el;
         });
       }
       return product;
     });
+
     // 오름차순으로 정렬
-    disposable.sort((a, b) => a - b);
-    reusable.sort((a, b) => a - b);
+    domestic.sort((a, b) => a - b);
+    overseas.sort((a, b) => a - b);
 
     // 해당 화학물질이 검출된 제품 수 계산
-    let NofDisposable = disposable.length;
-    let NofReusable = reusable.length;
+    let NofDomestic = domestic.length;
+    let NofOverseas = overseas.length;
 
     // 해당 화학물질이 검출된 제품 수의 비율
-    let PercentOfDisposable = ((Number(NofDisposable) / 333) * 100).toFixed(2);
-    let PercentOfReusable = ((Number(NofReusable) / 52) * 100).toFixed(2);
+    let PercentOfDomestic = ((Number(NofDomestic) / 365) * 100).toFixed(2);
+    let PercentOfOverseas = ((Number(NofOverseas) / 20) * 100).toFixed(2);
 
     // 해당 화학물질에 대한 평균값 계산
-    let meanOfDisposable = disposable
+    let meanOfDomestic = domestic
       .reduce((acc, curr, i, { length }) => {
         return i === length - 1 ? (acc + curr) / length : acc + curr;
       }, 0)
       .toFixed(2);
-    let meanOfReusable = reusable
+    let meanOfOverseas = overseas
       .reduce((acc, curr, i, { length }) => {
         return i === length - 1 ? (acc + curr) / length : acc + curr;
       }, 0)
       .toFixed(2);
 
     // 해당 화학물질에 대한 중앙값 계산
-    let medianOfDisposable =
-      disposable.length !== 1
+    let medianOfDomestic =
+      domestic.length !== 1
         ? (
-            (disposable[Math.floor(disposable.length / 2)] +
-              disposable[Math.ceil(disposable.length / 2)]) /
+            (domestic[Math.floor(domestic.length / 2)] +
+              domestic[Math.ceil(domestic.length / 2)]) /
             2
           ).toFixed(2)
-        : disposable[0];
-    let medianOfReusable =
-      reusable.length !== 1
+        : domestic[0];
+    let medianOfOverseas =
+      overseas.length !== 1
         ? (
-            (reusable[Math.floor(reusable.length / 2)] +
-              reusable[Math.ceil(reusable.length / 2)]) /
+            (overseas[Math.floor(overseas.length / 2)] +
+              overseas[Math.ceil(overseas.length / 2)]) /
             2
           ).toFixed(2)
-        : reusable[0];
+        : overseas[0];
 
     // 해당 화학물질에 대한 표준편차 계산
-    let SDofDisposable = Math.sqrt(
-      disposable
-        .map((x) => Math.pow(x - Number(meanOfDisposable), 2))
+    let SDofDomestic = Math.sqrt(
+      domestic
+        .map((x) => Math.pow(x - Number(meanOfDomestic), 2))
         .reduce((acc, curr, i, { length }) => {
           return i === length - 1 ? (acc + curr) / length : acc + curr;
         }, 0)
     ).toFixed(2);
-    let SDofReusable = Math.sqrt(
-      reusable
-        .map((x) => Math.pow(x - Number(meanOfReusable), 2))
+    let SDofOverseas = Math.sqrt(
+      overseas
+        .map((x) => Math.pow(x - Number(meanOfOverseas), 2))
         .reduce((acc, curr, i, { length }) => {
           return i === length - 1 ? (acc + curr) / length : acc + curr;
         }, 0)
     ).toFixed(2);
 
     // 해당 화학물질에 대한 최솟값 계산
-    let minOfDisposable = Math.min(...disposable).toFixed(2);
-    let minOfReusable = Math.min(...reusable).toFixed(2);
+    let minOfDomestic = Math.min(...domestic).toFixed(2);
+    let minOfOverseas = Math.min(...overseas).toFixed(2);
 
     // 해당 화학물질에 대한 최댓값 계산
-    let maxOfDisposable = Math.max(...disposable).toFixed(2);
-    let maxOfReusable = Math.max(...reusable).toFixed(2);
+    let maxOfDomestic = Math.max(...domestic).toFixed(2);
+    let maxOfOverseas = Math.max(...overseas).toFixed(2);
 
     return {
       chemicalName: chemical,
-      number: { disposable: NofDisposable, reusable: NofReusable },
+      number: { domestic: NofDomestic, overseas: NofOverseas },
       percentage: {
-        disposable: PercentOfDisposable,
-        reusable: PercentOfReusable,
+        domestic: PercentOfDomestic,
+        overseas: PercentOfOverseas,
       },
-      mean: { disposable: meanOfDisposable, reusable: meanOfReusable },
-      median: { disposable: medianOfDisposable, reusable: medianOfReusable },
-      SD: { disposable: SDofDisposable, reusable: SDofReusable },
-      min: { disposable: minOfDisposable, reusable: minOfReusable },
-      max: { disposable: maxOfDisposable, reusable: maxOfReusable },
+      mean: { domestic: meanOfDomestic, overseas: meanOfOverseas },
+      median: { domestic: medianOfDomestic, overseas: medianOfOverseas },
+      SD: { domestic: SDofDomestic, overseas: SDofOverseas },
+      min: { domestic: minOfDomestic, overseas: minOfOverseas },
+      max: { domestic: maxOfDomestic, overseas: maxOfOverseas },
     };
   });
 
@@ -208,26 +210,26 @@ const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
               <CH>
                 <Box onClick={clickToSearch}>{el.chemicalName}</Box>
               </CH>
-              <CD>일회용</CD>
+              <CD>국내유통</CD>
               <CD>
-                {el.number.disposable}{" "}
-                <Percent>({el.percentage.disposable}%)</Percent>
+                {el.number.domestic}{" "}
+                <Percent>({el.percentage.domestic}%)</Percent>
               </CD>
-              <CD>{el.mean.disposable}</CD>
-              <CD>{el.median.disposable}</CD>
-              <CD>{el.SD.disposable}</CD>
-              <CD>{el.min.disposable}</CD>
-              <CD>{el.max.disposable}</CD>
-              <CD>다회용</CD>
+              <CD>{el.mean.domestic}</CD>
+              <CD>{el.median.domestic}</CD>
+              <CD>{el.SD.domestic}</CD>
+              <CD>{el.min.domestic}</CD>
+              <CD>{el.max.domestic}</CD>
+              <CD>해외직구</CD>
               <CD>
-                {el.number.reusable}{" "}
-                <Percent>({el.percentage.reusable}%)</Percent>
+                {el.number.overseas}{" "}
+                <Percent>({el.percentage.overseas}%)</Percent>
               </CD>
-              <CD>{el.mean.reusable}</CD>
-              <CD>{el.median.reusable}</CD>
-              <CD>{el.SD.reusable}</CD>
-              <CD>{el.min.reusable}</CD>
-              <CD>{el.max.reusable}</CD>
+              <CD>{el.mean.overseas}</CD>
+              <CD>{el.median.overseas}</CD>
+              <CD>{el.SD.overseas}</CD>
+              <CD>{el.min.overseas}</CD>
+              <CD>{el.max.overseas}</CD>
             </Row>
           ))
         : null}
@@ -283,7 +285,7 @@ const CH = styled.div`
   font-size: 18px;
   padding: 10px;
   text-align: flex-start;
-  width: 160px;
+  width: 140px;
   box-sizing: border-box;
   border-right: 1px solid ${({ theme }) => theme.tableBorder};
   grid-row: 1 / span 2;
@@ -299,7 +301,7 @@ const CD = styled.div`
   box-sizing: border-box;
 
   &:nth-child(2) {
-    width: 80px;
+    width: 100px;
     border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
   }
 
@@ -329,7 +331,7 @@ const CD = styled.div`
   }
 
   &:nth-child(9) {
-    width: 80px;
+    width: 100px;
   }
 
   &:last-child {
