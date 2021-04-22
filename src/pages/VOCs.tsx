@@ -1,10 +1,15 @@
 import React from "react";
 import Main from "../components/VOCs";
 
-const index = () => {
+type Props = {
+  close: boolean;
+  clickToSearch: any;
+};
+
+const index = ({ close, clickToSearch }: Props) => {
   return (
     <>
-      <Main />
+      <Main close={close} clickToSearch={clickToSearch} />
     </>
   );
 };
