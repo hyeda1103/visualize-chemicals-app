@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
 
 type Props = {
@@ -7,14 +7,54 @@ type Props = {
   clickToClose: () => void;
 };
 
+// Indexable Types 설정
+type StringObj = {
+  [index: string]: string;
+};
+
 const Dictionary = ({ search, close, clickToClose }: Props) => {
+  const [termData, setTermData] = useState<StringObj[]>([]);
+  const [defintion, setDefinition] = useState("");
+  const [en, setEN] = useState("");
+
+  const getData = () => {
+    fetch("/data/Terminology.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (json) {
+        setTermData(json);
+      });
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    termData.forEach((el) => {
+      if (el.term === search) {
+        setDefinition(el.definition);
+        setEN(el.en);
+      }
+    });
+  }, [search]);
+
   return (
     <Section close={close}>
       <Drag onClick={clickToClose}>{close ? "열기" : "닫기"}</Drag>
-      <ResultWrapper>
-        검색어
-        <SearchKeyword>{search}</SearchKeyword>
-      </ResultWrapper>
+      <Inner>
+        <KeywordWrapper>
+          검색어
+          <SearchKeyword>{search}</SearchKeyword>
+          <English>{en}</English>
+        </KeywordWrapper>
+        <ResultWrapper>{defintion}</ResultWrapper>
+      </Inner>
     </Section>
   );
 };
@@ -39,13 +79,25 @@ const Section = styled.section<StyleProps>`
   z-index: 1;
 `;
 
-const ResultWrapper = styled.div`
+const Inner = styled.div`
   width: 75%;
   margin: 0 auto;
 `;
 
-const SearchKeyword = styled.h1`
+const ResultWrapper = styled.div`
+  margin: 13px 0;
+`;
+
+const KeywordWrapper = styled.div``;
+
+const SearchKeyword = styled.div`
   font-size: 30px;
+  font-weight: 700;
+  margin-right: 13px;
+`;
+
+const English = styled.div`
+  font-size: 15px;
 `;
 
 const Drag = styled.div`

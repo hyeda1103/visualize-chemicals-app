@@ -15,7 +15,7 @@ type DataProps = {
   데카날: string;
   트리클로로에틸렌: string;
   헥사클로로부타디엔: string;
-  Dichloromethane: string;
+  디클로로메탄: string;
   "1,2-디클로로에탄": string;
   벤젠: string;
   브로모디클로로메탄: string;
@@ -209,12 +209,14 @@ const GridContainer = styled.section`
 `;
 
 const Row = styled.div`
-  width: 960px;
+  width: 840px;
   display: grid;
   grid-template-columns: repeat(7, auto);
   border-bottom: 1px solid ${({ theme }) => theme.text};
   box-sizing: border-box;
   margin: 0 auto;
+  align-items: center;
+  height: 100%;
 
   &:last-child {
     border-bottom: 0;
@@ -222,20 +224,18 @@ const Row = styled.div`
 `;
 
 const TH = styled.div`
-  font-size: 18px;
   padding: 10px;
   text-align: flex-start;
-  width: 240px;
+  width: 180px;
   box-sizing: border-box;
   line-height: 2;
   border-right: 1px solid ${({ theme }) => theme.text};
 `;
 
 const TD = styled.div`
-  font-size: 18px;
-  padding: 10px;
+  padding: 14px;
   text-align: center;
-  width: calc((960px - 240px) / 6);
+  width: calc((840px - 180px) / 6);
   border-right: 1px solid ${({ theme }) => theme.text};
   box-sizing: border-box;
 

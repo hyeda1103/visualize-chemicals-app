@@ -14,7 +14,7 @@ type DataProps = {
   데카날: string;
   트리클로로에틸렌: string;
   헥사클로로부타디엔: string;
-  Dichloromethane: string;
+  디클로로메탄: string;
   "1,2-디클로로에탄": string;
   벤젠: string;
   브로모디클로로메탄: string;
@@ -183,9 +183,7 @@ const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
     <GridContainer>
       <Row>
         <TH>VOCs</TH>
-        <TD>
-          <Box onClick={clickToSearch}>제품 수</Box>
-        </TD>
+        <TD>제품 수</TD>
         <TD>
           <Box onClick={clickToSearch}>평균</Box>
         </TD>
@@ -241,10 +239,11 @@ const GridContainer = styled.section`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  margin: 60px 0;
 `;
 
 const Row = styled.div`
-  width: 960px;
+  width: 840px;
   display: grid;
   grid-template-columns: repeat(8, auto);
   border-bottom: 1px solid ${({ theme }) => theme.text};
@@ -257,20 +256,18 @@ const Row = styled.div`
 `;
 
 const TH = styled.div`
-  font-size: 18px;
   padding: 10px;
   text-align: center;
-  width: 240px;
+  width: 180px;
   box-sizing: border-box;
   border-right: 1px solid ${({ theme }) => theme.text};
   grid-column: 1 / span 2;
 `;
 
 const TD = styled.div`
-  font-size: 18px;
   padding: 10px;
   text-align: center;
-  width: calc((960px - 240px) / 6);
+  width: calc((840px - 180px) / 6);
   border-right: 1px solid ${({ theme }) => theme.text};
   box-sizing: border-box;
 
@@ -280,10 +277,9 @@ const TD = styled.div`
 `;
 
 const CH = styled.div`
-  font-size: 18px;
   padding: 10px;
   text-align: flex-start;
-  width: 160px;
+  width: 110px;
   box-sizing: border-box;
   border-right: 1px solid ${({ theme }) => theme.tableBorder};
   grid-row: 1 / span 2;
@@ -291,15 +287,14 @@ const CH = styled.div`
 `;
 
 const CD = styled.div`
-  font-size: 18px;
   padding: 10px;
   text-align: center;
-  width: calc((960px - 240px) / 6);
+  width: calc((840px - 180px) / 6);
   border-right: 1px solid ${({ theme }) => theme.text};
   box-sizing: border-box;
 
   &:nth-child(2) {
-    width: 80px;
+    width: 70px;
     border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
   }
 
@@ -329,7 +324,7 @@ const CD = styled.div`
   }
 
   &:nth-child(9) {
-    width: 80px;
+    width: 70px;
   }
 
   &:last-child {

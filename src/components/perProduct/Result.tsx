@@ -16,7 +16,7 @@ type DataProps = {
   데카날: string;
   트리클로로에틸렌: string;
   헥사클로로부타디엔: string;
-  Dichloromethane: string;
+  디클로로메탄: string;
   "1,2-디클로로에탄": string;
   벤젠: string;
   브로모디클로로메탄: string;

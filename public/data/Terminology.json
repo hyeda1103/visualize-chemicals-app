@@ -1,0 +1,56 @@
+[
+  {
+    "term": "생리용품",
+    "en": "feminine hygiene product",
+    "mathematicalExpression": null,
+    "definition": "이것은 생리용품에 대한 설명입니다."
+  },
+  {
+    "term": "VOCs",
+    "en": "Volatile Organic Compounds",
+    "mathematicalExpression": null,
+    "definition": "이것은 VOCs에 대한 설명입니다."
+  },
+  {
+    "term": "평균",
+    "en": "average",
+    "mathematicalExpression": null,
+    "definition": "이것은 평균에 대한 설명입니다."
+  },
+  {
+    "term": "중앙값",
+    "en": "median",
+    "mathematicalExpression": null,
+    "definition": "이것은 중앙값에 대한 설명입니다."
+  },
+  {
+    "term": "표준편차",
+    "en": "standard deviation",
+    "mathematicalExpression": null,
+    "definition": "이것은 표준편차에 대한 설명입니다."
+  },
+  {
+    "term": "최솟값",
+    "en": "minimum value",
+    "mathematicalExpression": null,
+    "definition": "이것은 최솟값에 대한 설명입니다."
+  },
+  {
+    "term": "최댓값",
+    "en": "maximum value",
+    "mathematicalExpression": null,
+    "definition": "이것은 최댓값에 대한 설명입니다."
+  },
+  {
+    "term": "에틸벤젠",
+    "en": "maximum value",
+    "mathematicalExpression": null,
+    "definition": "이것은 에틸벤젠에 대한 설명입니다."
+  },
+  {
+    "term": "운데칸",
+    "en": "maximum value",
+    "mathematicalExpression": null,
+    "definition": "이것은 운데칸젶에 대한 설명입니다."
+  }
+]

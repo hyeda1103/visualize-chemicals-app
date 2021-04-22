@@ -16,7 +16,7 @@ type DataProps = {
   데카날: string;
   트리클로로에틸렌: string;
   헥사클로로부타디엔: string;
-  Dichloromethane: string;
+  디클로로메탄: string;
   "1,2-디클로로에탄": string;
   벤젠: string;
   브로모디클로로메탄: string;
@@ -170,8 +170,9 @@ const Result = ({ data, clickToSearch }: Props) => {
         검출된 것으로 나타났다.
       </Paragraph>
       <TableTitle onClick={handleToggle}>
-        <Toggle onClick={handleToggle} show={show} /> [표] 일회용과 다회용에서
-        모두 검출된 23종의 VOCs에 대한 통계
+        <Toggle onClick={handleToggle} show={show} /> [표] 일회용 생리용품과
+        다회용 생리용품에서 모두 검출된 {DetectedInBoth.length}종의 VOCs에 대한
+        통계
       </TableTitle>
       <TableBody show={show}>
         <Table
@@ -187,7 +188,7 @@ const Result = ({ data, clickToSearch }: Props) => {
 export default Result;
 
 const ResultWrapper = styled.section`
-  width: 960px;
+  width: 840px;
   margin: 0 auto;
 `;
 
@@ -202,6 +203,7 @@ const Paragraph = styled.div`
 const TableTitle = styled.div`
   display: flex;
   cursor: pointer;
+  font-size: 20px;
 `;
 
 type StyleProps = {
