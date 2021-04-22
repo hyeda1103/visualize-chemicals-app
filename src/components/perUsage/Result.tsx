@@ -224,7 +224,7 @@ const CloseToggle = keyframes`
 
 const Toggle = styled.div<StyleProps>`
   margin-right: 13px;
-  margin-top: 2px;
+  margin-top: 1px;
   cursor: pointer;
   ${(props) =>
     props.show
@@ -241,9 +241,8 @@ const Toggle = styled.div<StyleProps>`
     width: 0px;
     height: 0px;
     content: "";
-    border-left: 13px solid ${({ theme }) => theme.text};
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-radius: 3px;
+    border-left: 11px solid ${({ theme }) => theme.text};
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
   }
 `;

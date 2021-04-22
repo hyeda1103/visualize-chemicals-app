@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState, useEffect } from "react";
+import styled, { keyframes, css } from "styled-components";
 import Table from "./Table";
 
 type DataProps = {
@@ -81,6 +81,15 @@ const Result = ({ data, clickToSearch }: Props) => {
   let VOCsFromDomestic: string[] = [];
   let VOCsFromOverseas: string[] = [];
 
+  const [click, setClick] = useState<boolean>(false);
+  const [show, setShow] = useState<boolean>(false);
+
+  const handleToggle = () => setClick(!click);
+
+  useEffect(() => {
+    click ? setShow(true) : setShow(false);
+  }, [click]);
+
   data.map((product) =>
     product.distribution === "국내유통" ? domesticN++ : overseaN++
   );
@@ -160,15 +169,17 @@ const Result = ({ data, clickToSearch }: Props) => {
         {OnlyInDomestic.length}종, 해외직구에서만 검출된 VOCs는{" "}
         {OnlyInOverseas.length}종으로 나타났다.
       </Paragraph>
-      <Paragraph>
-        두 가지 모두에서 검출된 {DetectedInBoth.length}종의 VOCs에 대해
-        국내유통과 해외직구 생리용품에서의 검출량을 비교한 결과는 다음과 같다.
-      </Paragraph>
-      <Table
-        data={data}
-        detectedInBoth={DetectedInBoth}
-        clickToSearch={clickToSearch}
-      />
+      <TableTitle onClick={handleToggle}>
+        <Toggle onClick={handleToggle} show={show} /> [표] 국내유통과 해외직구
+        생리용품에서 모두 검출된 {DetectedInBoth.length}종의 VOCs에 대한 통계
+      </TableTitle>
+      <TableBody show={show}>
+        <Table
+          data={data}
+          detectedInBoth={DetectedInBoth}
+          clickToSearch={clickToSearch}
+        />
+      </TableBody>
     </ResultWrapper>
   );
 };
@@ -186,4 +197,52 @@ const Paragraph = styled.div`
   width: 840px;
   margin: 40px auto;
   font-size: 20px;
+`;
+
+const TableTitle = styled.div`
+  display: flex;
+  cursor: pointer;
+`;
+
+type StyleProps = {
+  show: boolean;
+};
+
+const TableBody = styled.div<StyleProps>`
+  display: ${({ show }) => (show ? `block` : `none`)};
+`;
+
+const OpenToggle = keyframes`
+  0% {transform: rotate(0deg);}
+  100% {transform: rotate(90deg);}
+`;
+
+const CloseToggle = keyframes`
+  0% {transform: rotate(90deg);}
+  100% {transform: rotate(0deg);}
+`;
+
+const Toggle = styled.div<StyleProps>`
+  margin-right: 13px;
+  margin-top: 1px;
+  cursor: pointer;
+  ${(props) =>
+    props.show
+      ? css`
+          animation: ${OpenToggle} 0.1s ease;
+        `
+      : css`
+          animation: ${CloseToggle} 0.1s ease;
+        `}
+  transform-origin: 60% 50%;
+  transform: ${({ show }) => (show ? `rotate(90deg)` : `rotate(0deg)`)};
+  &:after {
+    display: inline-block;
+    width: 0px;
+    height: 0px;
+    content: "";
+    border-left: 11px solid ${({ theme }) => theme.text};
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+  }
 `;
