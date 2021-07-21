@@ -36,4 +36,4 @@ $ yarn start
 
 ## Status
 
-The project started on April 17th, and currently in progress(Upadated on April 18th). Feel free to contact us if you have interests in this project!
+The project started on April 17th, and currently in progress(Upadated on July 22nd). Feel free to contact us if you have interests in this project!
