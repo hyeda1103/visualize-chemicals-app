@@ -16,6 +16,7 @@ const Dictionary = ({ search, close, clickToClose }: Props) => {
   const [termData, setTermData] = useState<StringObj[]>([]);
   const [defintion, setDefinition] = useState("");
   const [en, setEN] = useState("");
+  const [reference, setReference] = useState<any>([])
 
   const getData = () => {
     fetch("/data/Terminology.json", {
@@ -40,20 +41,24 @@ const Dictionary = ({ search, close, clickToClose }: Props) => {
       if (el.term === search) {
         setDefinition(el.definition);
         setEN(el.en);
+        setReference(el.reference)
       }
     });
-  }, [search]);
+  }, [search, termData]);
 
   return (
     <Section close={close}>
       <Drag onClick={clickToClose}>{close ? "열기" : "닫기"}</Drag>
       <Inner>
         <KeywordWrapper>
-          검색어
+          용어사전
           <SearchKeyword>{search}</SearchKeyword>
           <English>{en}</English>
         </KeywordWrapper>
         <ResultWrapper>{defintion}</ResultWrapper>
+        {reference.map((item: string, idx: number) => (
+          <ReferenceWrapper key={ `${item}${idx}` }>{ item }</ReferenceWrapper>
+        ))}
       </Inner>
     </Section>
   );
@@ -101,6 +106,8 @@ const SearchKeyword = styled.div`
 const English = styled.div`
   font-size: 15px;
 `;
+
+const ReferenceWrapper = styled.div``
 
 const Drag = styled.div`
   background: ${({ theme }) => theme.text};
