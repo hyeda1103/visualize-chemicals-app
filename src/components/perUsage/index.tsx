@@ -52,11 +52,11 @@ type StyleProps = {
 };
 
 const Inner = styled.div<StyleProps>`
-  width: ${({ close }) => (close ? "960px" : "70%")};
-  margin: ${({ close }) => (close ? "0 auto" : "0")};
+  transform: ${({ close }) => (close ? 'translateX(0)' : 'translateX(-15%)')};
   position: relative;
   padding: 112px 0;
-`;
+  transition: 0.6s;
+`
 
 const Column = styled.div`
   padding: 40px 0;

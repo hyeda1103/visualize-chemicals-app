@@ -69,7 +69,8 @@ const Section = styled.section<StyleProps>`
   position: fixed;
   right: 0;
   top: 60px;
-  width: ${({ close }) => (close ? "0" : "30%")};
+  width: 30%;
+  transform: ${({ close }) => (close ? 'translateX(100%)' : 'translateX(0)')};
   height: 100vh;
   padding: 112px 0;
   border-left: 2px dashed ${({ theme }) => theme.text};
@@ -77,7 +78,8 @@ const Section = styled.section<StyleProps>`
   color: ${({ theme }) => theme.text};
   align-items: center;
   z-index: 1;
-`;
+  transition: 0.6s ease;
+`
 
 const Inner = styled.div`
   width: 75%;
