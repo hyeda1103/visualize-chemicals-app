@@ -79,7 +79,7 @@ const Section = styled.section<StyleProps>`
   height: 100vh;
   padding: 112px 0;
   border-left: 2px dashed ${({ theme }) => theme.text};
-  background: ${({ theme }) => theme.body};
+  background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
   align-items: center;
   z-index: 1;
@@ -111,7 +111,7 @@ const ReferenceWrapper = styled.div``
 
 const Drag = styled.div`
   background: ${({ theme }) => theme.text};
-  color: ${({ theme }) => theme.body};
+  color: ${({ theme }) => theme.background};
   width: 100px;
   text-align: center;
   margin-left: -65px;

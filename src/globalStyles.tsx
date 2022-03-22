@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
 
     html, body {
         overflow-x: hidden;
-        background: ${({ theme }) => theme.body};
+        background: ${({ theme }) => theme.background};
         color: ${({ theme }) => theme.text};
         transition: all 0.4s linear;
     }

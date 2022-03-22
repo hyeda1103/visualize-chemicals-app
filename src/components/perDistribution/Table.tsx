@@ -341,15 +341,15 @@ const Percent = styled.span`
 
 const Box = styled.span`
   padding: 1px 10px;
-  border: 1px solid ${({ theme }: any) => theme.text};
-  background: ${({ theme }: any) => theme.body};
-  color: ${({ theme }: any) => theme.text};
+  border: 1px solid ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.text};
   cursor: pointer;
   border-radius: 10px;
   transition: 0.6s ease;
 
   &:hover {
-    color: ${({ theme }: any) => theme.body};
-    background: ${({ theme }: any) => theme.text};
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.text};
   }
 `;

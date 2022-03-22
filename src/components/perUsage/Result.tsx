@@ -72,7 +72,7 @@ type DataProps = {
 
 type Props = {
   data: DataProps[];
-  clickToSearch: string;
+  clickToSearch: () => void;
 };
 
 const Result = ({ data, clickToSearch }: Props) => {

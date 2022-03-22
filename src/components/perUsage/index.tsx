@@ -4,7 +4,7 @@ import Result from "./Result";
 
 type Props = {
   close: boolean;
-  clickToSearch: string;
+  clickToSearch: () => void;
 };
 
 const VOCs = ({ close, clickToSearch }: Props) => {

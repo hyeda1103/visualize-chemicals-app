@@ -4,15 +4,38 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { handleSideBar } from "./../modules/sideBar";
 
-type Props = {
+const Nav = styled.nav<{ open: boolean }>`
+  height: calc(100vh - 60px);
+  top: 80px;
+  transform: ${({ open }) => (open ? "translateX(0)" : "translateX(-100%)")};
+  position: fixed;
+  z-index: 3;
+  padding: 20px;
+  background: ${({ theme }) => theme.background};
+  transition: 0.25s ease;
+`;
+
+const NavItem = styled(Link)`
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 300;
+  padding: 15px 20px;
+  width: 100%;
+  letter-spacing: 1.4px;
+  cursor: pointer;
+  display: block;
+  color: ${({ theme }) => theme.text}
+`;
+
+
+interface Props {
   open: boolean;
 };
 
 const SideBar = ({ open }: Props) => {
-  const dispatch = useDispatch(); // 디스패치 함수를 가져옵니다
-  const onClick = () => {
-    dispatch(handleSideBar());
-  };
+  const dispatch = useDispatch();
+  const onClick = () => dispatch(handleSideBar());
+
   return (
     <Nav open={open}>
       <NavItem to="/" onClick={onClick}>
@@ -26,26 +49,3 @@ const SideBar = ({ open }: Props) => {
 };
 
 export default SideBar;
-
-const Nav = styled.section<Props>`
-  height: calc(100vh - 60px);
-  top: 60px;
-  transform: ${({ open }) => (open ? "translateX(0)" : "translateX(-100%)")};
-  position: fixed;
-  z-index: 3;
-  padding: 20px;
-  background: #363537;
-  transition: 0.6s ease;
-`;
-
-const NavItem = styled(Link)`
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: 300;
-  padding: 15px 20px;
-  width: 100%;
-  letter-spacing: 1.4px;
-  cursor: pointer;
-  display: block;
-  color: #f6f5f0;
-`;

@@ -1,14 +1,31 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
 import SelectBox from "./Select";
+import * as T from '../../types';
+import OnePartLayout from "../template/OnePart";
 
-type Props = {
+const Box = styled.span`
+  padding: 0 30px;
+  border: 3px solid ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+  cursor: pointer;
+  border-radius: 10px;
+  transition: 0.6s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.background};
+    background: ${({ theme }) => theme.text};
+  }
+`;
+
+interface Props {
   close: boolean;
-  clickToSearch: any;
+  clickToSearch: () => void;
 };
 
 const VOCs = ({ close, clickToSearch }: Props) => {
-  const [VOCsData, setVOCsData] = useState([]);
+  const [VOCsData, setVOCsData] = useState<Array<T.ChemicalData>>();
   const getData = () => {
     fetch("/data/2020_VOCs_data_385.json", {
       headers: {
@@ -27,63 +44,25 @@ const VOCs = ({ close, clickToSearch }: Props) => {
     getData();
   }, []);
 
+  const title = (
+    <>
+      생리용품 <Box onClick={clickToSearch}>VOCs</Box> 검출결과
+    </>
+  )
+
+  const content = (
+    <>
+      {VOCsData && <SelectBox clickToSearch={clickToSearch} ChemicalData={VOCsData} />}
+    </>
+  )
+
   return (
-    <Section>
-      <Inner close={close}>
-        <Column>
-          <TitleWrapper>
-            <Title>
-              생리용품 <Box onClick={clickToSearch}>VOCs</Box> 검출결과
-            </Title>
-          </TitleWrapper>
-          <SelectBox clickToSearch={clickToSearch} data={VOCsData} />
-        </Column>
-      </Inner>
-    </Section>
+    <OnePartLayout
+      close={close}
+      title={title}
+      content={content}
+    />
   );
 };
 
 export default VOCs;
-
-const Section = styled.section`
-  width: 100%;
-`;
-
-type StyleProps = {
-  close: boolean;
-};
-
-const Inner = styled.div<StyleProps>`
-  transform: ${({ close }) => (close ? 'translateX(0)' : 'translateX(-15%)')};
-  position: relative;
-  padding: 112px 0;
-  transition: 0.6s;
-`
-
-const Column = styled.div`
-  padding: 40px 0;
-`;
-
-const TitleWrapper = styled.div`
-  text-align: center;
-`;
-
-const Title = styled.div`
-  font-size: 70px;
-  font-weight: 700;
-`;
-
-const Box = styled.span`
-  padding: 0 30px;
-  border: 3px solid ${({ theme }: any) => theme.text};
-  background: ${({ theme }: any) => theme.body};
-  color: ${({ theme }: any) => theme.text};
-  cursor: pointer;
-  border-radius: 10px;
-  transition: 0.6s ease;
-
-  &:hover {
-    color: ${({ theme }: any) => theme.body};
-    background: ${({ theme }: any) => theme.text};
-  }
-`;
