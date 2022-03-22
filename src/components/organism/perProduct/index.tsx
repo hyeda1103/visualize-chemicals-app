@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, MouseEvent } from "react";
 import styled from "styled-components/macro";
 import SelectBox from "./Select";
-import * as T from '../../types';
-import OnePartLayout from "../template/OnePart";
+import * as T from '../../../types';
+import OnePartLayout from "../../template/OnePart";
 
 const Box = styled.span`
   padding: 0 30px;
@@ -11,7 +11,7 @@ const Box = styled.span`
   color: ${({ theme }) => theme.text};
   cursor: pointer;
   border-radius: 10px;
-  transition: 0.6s ease;
+  transition: 0.25s ease;
 
   &:hover {
     color: ${({ theme }) => theme.background};
@@ -21,7 +21,12 @@ const Box = styled.span`
 
 interface Props {
   close: boolean;
-  clickToSearch: () => void;
+  clickToSearch: (e: MouseEvent<HTMLElement>) => {
+    type: "dictionay/SEARCH";
+    payload: {
+      e: MouseEvent<HTMLElement, globalThis.MouseEvent>;
+    };
+  };
 };
 
 const VOCs = ({ close, clickToSearch }: Props) => {

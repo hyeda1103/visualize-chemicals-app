@@ -1,6 +1,6 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import styled from "styled-components";
-import * as T from '../../types'
+import * as T from '../../../types'
 
 
 const GridContainer = styled.section`
@@ -111,7 +111,7 @@ const Box = styled.span`
   color: ${({ theme }) => theme.text};
   cursor: pointer;
   border-radius: 10px;
-  transition: 0.6s ease;
+  transition: 0.25s ease;
 
   &:hover {
     color: ${({ theme }) => theme.background};
@@ -122,14 +122,19 @@ const Box = styled.span`
 
 interface Props {
   data: Array<T.ChemicalData>;
-  detectedInBoth: string[];
-  clickToSearch: () => void;
+  detectedInBoth: Array<string>;
+  clickToSearch: (e: MouseEvent<HTMLElement>) => {
+    type: "dictionay/SEARCH";
+    payload: {
+      e: MouseEvent<HTMLElement, globalThis.MouseEvent>;
+    };
+  };
 };
 
 const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
   let table = detectedInBoth.map((chemical) => {
-    let disposable: number[] = [];
-    let reusable: number[] = [];
+    let disposable: Array<number> = [];
+    let reusable: Array<number> = [];
     data.map((product) => {
       if (product.usage === "일회용") {
         let arr = Object.entries(product);

@@ -1,8 +1,8 @@
-type sideBarState = {
+interface sideBarState {
   open: boolean;
 };
 
-type sideBarAction = {
+interface sideBarAction {
   type: string;
 };
 

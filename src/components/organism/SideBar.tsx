@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { handleSideBar } from "./../modules/sideBar";
+import { handleSideBar } from "../../modules/sideBar";
 
 const Nav = styled.nav<{ open: boolean }>`
   height: calc(100vh - 60px);
@@ -18,8 +18,8 @@ const Nav = styled.nav<{ open: boolean }>`
 const NavItem = styled(Link)`
   text-decoration: none;
   font-size: 18px;
-  font-weight: 300;
-  padding: 15px 20px;
+  font-weight: 500;
+  padding: 15px 8px;
   width: 100%;
   letter-spacing: 1.4px;
   cursor: pointer;
@@ -39,10 +39,13 @@ const SideBar = ({ open }: Props) => {
   return (
     <Nav open={open}>
       <NavItem to="/" onClick={onClick}>
-        홈으로
+        제품별 VOCs
       </NavItem>
-      <NavItem to="/VOCs" onClick={onClick}>
-        2021 여름 생리용품
+      <NavItem to="/disposable-vs-reusable" onClick={onClick}>
+        일회용 vs. 다회용
+      </NavItem>
+      <NavItem to="/domestic-vs-overseas" onClick={onClick}>
+        국내유통 vs. 해외직구
       </NavItem>
     </Nav>
   );

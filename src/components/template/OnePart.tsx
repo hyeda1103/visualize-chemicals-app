@@ -13,7 +13,7 @@ const Inner = styled.div<StyleProps>`
   transform: ${({ close }) => (close ? 'translateX(0)' : 'translateX(-15%)')};
   position: relative;
   padding: 200px 0;
-  transition: 0.6s;
+  transition: 0.25s;
 `
 
 const Column = styled.div`

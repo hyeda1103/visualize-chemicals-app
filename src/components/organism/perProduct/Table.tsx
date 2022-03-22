@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, MouseEvent } from "react";
 import styled from "styled-components";
-import * as T from './../../types/index';
+import * as T from '../../../types/index';
 
 
 const GridContainer = styled.section`
@@ -63,11 +63,16 @@ const Box = styled.span`
 interface Props {
   data: Array<T.ChemicalData>;
   chemicalInfo?: T.StringObj;
-  clickToSearch: () => void;
+  clickToSearch: (e: MouseEvent<HTMLElement>) => {
+    type: "dictionay/SEARCH";
+    payload: {
+      e: MouseEvent<HTMLElement, globalThis.MouseEvent>;
+    };
+  };
 };
 
 const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
-  const [chemicalList, setChemicalList] = useState<string[]>([]);
+  const [chemicalList, setChemicalList] = useState<Array<string>>([]);
   const table: T.StringObj[][] = [];
 
   useEffect(() => {
@@ -78,8 +83,8 @@ const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
 
   // 검출된 화학물질에 대한 통계수치 계산
   if (chemicalList) {
-    let tableInfo = chemicalList.map((chemical) => {
-      let detectedPerProduct: number[] = [];
+    const tableInfo = chemicalList.map((chemical) => {
+      const detectedPerProduct: Array<number> = [];
 
       // 모든 생리용품에 대한 화학물질 검출량 추출
       Object.entries(data).map((product) => {
@@ -92,21 +97,21 @@ const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
       detectedPerProduct.sort((a, b) => a - b);
 
       // 해당 화학물질에 대한 평균값 계산
-      let mean = detectedPerProduct
+      const mean = detectedPerProduct
         .reduce((acc, curr, i, { length }) => {
           return i === length - 1 ? (acc + curr) / length : acc + curr;
         }, 0)
         .toFixed(2);
 
       // 해당 화학물질에 대한 중앙값 계산
-      let median = (
+      const median = (
         (detectedPerProduct[Math.floor(detectedPerProduct.length / 2)] +
           detectedPerProduct[Math.ceil(detectedPerProduct.length / 2)]) /
         2
       ).toFixed(2);
 
       // 해당 화학물질에 대한 표준편차 계산
-      let SD = Math.sqrt(
+      const SD = Math.sqrt(
         detectedPerProduct
           .map((x) => Math.pow(x - Number(mean), 2))
           .reduce((acc, curr, i, { length }) => {
@@ -145,7 +150,7 @@ const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
   return (
     <GridContainer>
       <Row>
-        <TH>VOCs</TH>
+        <TH>검출 VOCs</TH>
         <TD>
           <Box onClick={clickToSearch}>검출량</Box>
         </TD>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect, Suspense, MouseEvent, FC } from 'react'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
 import ReactGA from 'react-ga'
 import { useSelector, useDispatch } from 'react-redux'
@@ -8,12 +8,14 @@ import { handleSideBar } from './modules/sideBar'
 import styled, { ThemeProvider } from 'styled-components'
 import { lightTheme, darkTheme } from './Theme'
 import GlobalStyle from './globalStyles'
-import LoadingPage from './pages/loading'
+import LoadingPage from './components/pages/loading'
 import ScrollToTop from './ScrollToTop'
 import Header from './components/organism/Header'
 import Dictionary from './components/Dictionary'
-import VOCsPage from './pages/VOCs'
-import SideBar from './components/SideBar';
+import VOCsPerProduct from './components/pages/VOCsPerProduct'
+import VOCsPerUsage from './components/pages/VOCsPerUsage'
+import VOCsPerDistribution from './components/pages/VOCsPerDistribution'
+import SideBar from './components/organism/SideBar';
 
 const DimmedOut = styled.div<{ open: boolean }>`
   position: fixed;
@@ -27,7 +29,7 @@ const DimmedOut = styled.div<{ open: boolean }>`
   z-index: 2;
 `
 
-const App: React.FC = () => {
+const App: FC = () => {
   const [theme, setTheme] = useState('light')
   const open = useSelector((state: RootState) => state.sideBar.open)
   const search = useSelector((state: RootState) => state.dictionary.search)
@@ -35,7 +37,7 @@ const App: React.FC = () => {
 
   const dispatch = useDispatch()
   const clickToOpen = () => dispatch(handleSideBar())
-  const clickToSearch = (e: MouseEvent) => dispatch(handleSearch(e))
+  const clickToSearch = (e: MouseEvent<HTMLElement>) => dispatch(handleSearch(e))
   
   const clickToClose = () => dispatch(handleClose())
 
@@ -59,7 +61,9 @@ const App: React.FC = () => {
           <SideBar open={open} />
           <Dictionary search={search} close={close} clickToClose={clickToClose} />
           <Switch>
-            <Route exact path="/" render={() => <VOCsPage close={close} clickToSearch={clickToSearch} />} />
+            <Route exact path="/" render={() => <VOCsPerProduct close={close} clickToSearch={clickToSearch} />} />
+            <Route exact path="/disposable-vs-reusable" render={() => <VOCsPerUsage close={close} clickToSearch={clickToSearch} />} />
+            <Route exact path="/domestic-vs-overseas" render={() => <VOCsPerDistribution close={close} clickToSearch={clickToSearch} />} />
           </Switch>
         </ThemeProvider>
       </Suspense>

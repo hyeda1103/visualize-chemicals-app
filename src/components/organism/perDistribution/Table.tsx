@@ -1,83 +1,138 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import styled from "styled-components";
-type DataProps = {
-  index: number;
-  distribution: string;
-  usage: string;
-  company: string;
-  productName: string;
-  에틸벤젠: string;
-  운데칸: string;
-  스티렌: string;
-  노나날: string;
-  클로로포름: string;
-  데카날: string;
-  트리클로로에틸렌: string;
-  헥사클로로부타디엔: string;
-  디클로로메탄: string;
-  "1,2-디클로로에탄": string;
-  벤젠: string;
-  브로모디클로로메탄: string;
-  톨루엔: "0.12";
-  "1,4-디클로로벤젠": string;
-  "(p-, m-, o-)자일렌": string;
-  나프탈렌: string;
-  헥산: string;
-  "(1S)-(-)-알파-피넨": string;
-  테트라클로로에틸렌: string;
-  "(-)-베타-피넨": string;
-  "2-프로판올": string;
-  "2-에틸톨루엔": string;
-  "2-부타논": string;
-  "3-에틸톨루엔": string;
-  에틸아세테이트: string;
-  "4-에틸톨루엔": string;
-  이소옥탄: string;
-  "1,2,3-트리메틸벤젠": string;
-  "4-메틸-2-펜타논": string;
-  "1,2,4-트리메틸벤젠": string;
-  옥탄: string;
-  "1,3,5-트리메틸벤젠": string;
-  "1,1,2-트리클로로에탄": string;
-  "1,2-디클로로프로판": string;
-  "1,3-디클로로프로판": string;
-  사염화탄소: string;
-  부틸아세테이트: string;
-  "2,4-디메틸펜탄": string;
-  클로로벤젠: string;
-  "1,2,4,5-테트라메틸벤젠": string;
-  노난: string;
-  도데칸: string;
-  쿠멘: string;
-  트리데칸: string;
-  프로필벤젠: string;
-  테트라데칸: string;
-  데칸: string;
-  "n-펜타데칸": string;
-  "sec-부틸벤젠": string;
-  "n-헥사데칸": string;
-  "(R)-(+)-리모넨": string;
-  에탄올: string;
-  "p-시멘": string;
-  아세톤: string;
-  "1,2,3-트리클로로벤젠": string;
-  "1-프로판올": string;
-  "n-부틸벤젠": string;
-  헵탄: string;
-  "1,2-디클로로벤젠": string;
-  "1-부탄올": string;
-};
+import * as T from '../../../types';
 
-type Props = {
-  data: DataProps[];
-  detectedInBoth: string[];
-  clickToSearch: any;
+const GridContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin: 60px 0;
+`;
+
+const Row = styled.div`
+  width: 840px;
+  display: grid;
+  grid-template-columns: repeat(8, auto);
+  border-bottom: 1px solid ${({ theme }) => theme.text};
+  box-sizing: border-box;
+  margin: 0 auto;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+`;
+
+const TH = styled.div`
+  padding: 10px;
+  text-align: center;
+  width: 180px;
+  box-sizing: border-box;
+  border-right: 1px solid ${({ theme }) => theme.text};
+  grid-column: 1 / span 2;
+`;
+
+const TD = styled.div`
+  padding: 10px;
+  text-align: center;
+  width: calc((840px - 180px) / 6);
+  border-right: 1px solid ${({ theme }) => theme.text};
+  box-sizing: border-box;
+
+  &:last-child {
+    border-right: 0;
+  }
+`;
+
+const CH = styled.div`
+  padding: 10px;
+  text-align: flex-start;
+  width: 110px;
+  box-sizing: border-box;
+  border-right: 1px solid ${({ theme }) => theme.tableBorder};
+  grid-row: 1 / span 2;
+  line-height: 2;
+`;
+
+const CD = styled.div`
+  padding: 10px;
+  text-align: center;
+  width: calc((840px - 180px) / 6);
+  border-right: 1px solid ${({ theme }) => theme.text};
+  box-sizing: border-box;
+
+  &:nth-child(2) {
+    width: 70px;
+    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
+  }
+
+  &:nth-child(3) {
+    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
+  }
+
+  &:nth-child(4) {
+    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
+  }
+
+  &:nth-child(5) {
+    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
+  }
+
+  &:nth-child(6) {
+    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
+  }
+
+  &:nth-child(7) {
+    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
+  }
+
+  &:nth-child(8) {
+    border-right: 0;
+    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
+  }
+
+  &:nth-child(9) {
+    width: 70px;
+  }
+
+  &:last-child {
+    border-right: 0;
+  }
+`;
+
+const Percent = styled.span`
+  font-size: 12px;
+`;
+
+const Box = styled.span`
+  padding: 1px 10px;
+  border: 1px solid ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+  cursor: pointer;
+  border-radius: 10px;
+  transition: 0.25s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.background};
+    background: ${({ theme }) => theme.text};
+  }
+`;
+
+interface Props {
+  data: Array<T.ChemicalData>;
+  detectedInBoth: Array<string>;
+  clickToSearch: (e: MouseEvent<HTMLElement>) => {
+    type: "dictionay/SEARCH";
+    payload: {
+      e: MouseEvent<HTMLElement, globalThis.MouseEvent>;
+    };
+  };
 };
 
 const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
   let table = detectedInBoth.map((chemical) => {
-    let domestic: number[] = [];
-    let overseas: number[] = [];
+    let domestic: Array<number> = [];
+    let overseas: Array<number> = [];
     data.map((product) => {
       if (product.distribution === "국내유통") {
         let arr = Object.entries(product);
@@ -237,119 +292,3 @@ const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
 };
 
 export default Table;
-
-const GridContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  margin: 60px 0;
-`;
-
-const Row = styled.div`
-  width: 840px;
-  display: grid;
-  grid-template-columns: repeat(8, auto);
-  border-bottom: 1px solid ${({ theme }) => theme.text};
-  box-sizing: border-box;
-  margin: 0 auto;
-
-  &:last-child {
-    border-bottom: 0;
-  }
-`;
-
-const TH = styled.div`
-  padding: 10px;
-  text-align: center;
-  width: 180px;
-  box-sizing: border-box;
-  border-right: 1px solid ${({ theme }) => theme.text};
-  grid-column: 1 / span 2;
-`;
-
-const TD = styled.div`
-  padding: 10px;
-  text-align: center;
-  width: calc((840px - 180px) / 6);
-  border-right: 1px solid ${({ theme }) => theme.text};
-  box-sizing: border-box;
-
-  &:last-child {
-    border-right: 0;
-  }
-`;
-
-const CH = styled.div`
-  padding: 10px;
-  text-align: flex-start;
-  width: 110px;
-  box-sizing: border-box;
-  border-right: 1px solid ${({ theme }) => theme.tableBorder};
-  grid-row: 1 / span 2;
-  line-height: 2;
-`;
-
-const CD = styled.div`
-  padding: 10px;
-  text-align: center;
-  width: calc((840px - 180px) / 6);
-  border-right: 1px solid ${({ theme }) => theme.text};
-  box-sizing: border-box;
-
-  &:nth-child(2) {
-    width: 70px;
-    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
-  }
-
-  &:nth-child(3) {
-    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
-  }
-
-  &:nth-child(4) {
-    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
-  }
-
-  &:nth-child(5) {
-    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
-  }
-
-  &:nth-child(6) {
-    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
-  }
-
-  &:nth-child(7) {
-    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
-  }
-
-  &:nth-child(8) {
-    border-right: 0;
-    border-bottom: 1px solid ${({ theme }) => theme.tableBorder};
-  }
-
-  &:nth-child(9) {
-    width: 70px;
-  }
-
-  &:last-child {
-    border-right: 0;
-  }
-`;
-
-const Percent = styled.span`
-  font-size: 12px;
-`;
-
-const Box = styled.span`
-  padding: 1px 10px;
-  border: 1px solid ${({ theme }) => theme.text};
-  background: ${({ theme }) => theme.text};
-  color: ${({ theme }) => theme.text};
-  cursor: pointer;
-  border-radius: 10px;
-  transition: 0.6s ease;
-
-  &:hover {
-    color: ${({ theme }) => theme.text};
-    background: ${({ theme }) => theme.text};
-  }
-`;

@@ -6,6 +6,7 @@ declare module "styled-components" {
   export interface DefaultTheme {
     text: string;
     background: string;
+    highlight: string;
     mode: string;
     tableBorder: string;
   }

@@ -1,21 +1,91 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, MouseEvent } from "react";
 import styled, { keyframes, css } from "styled-components";
 
-import * as T from '../../types'
+import * as T from '../../../types'
 import Table from "./Table";
 
+const ResultWrapper = styled.section`
+  width: 840px;
+  margin: 0 auto;
+`;
 
+const Paragraph = styled.div`
+  text-align: justify;
+  line-height: 2;
+  width: 840px;
+  margin: 40px auto;
+  font-size: 20px;
+`;
 
-type Props = {
+const TableTitle = styled.div`
+  display: flex;
+  cursor: pointer;
+  font-size: 20px;
+`;
+
+interface StyleProps {
+  show: boolean;
+};
+
+const TableBody = styled.div<StyleProps>`
+  display: ${({ show }) => (show ? `block` : `none`)};
+`;
+
+const OpenToggle = keyframes`
+  0% {transform: rotate(0deg);}
+  100% {transform: rotate(90deg);}
+`;
+
+const CloseToggle = keyframes`
+  0% {transform: rotate(90deg);}
+  100% {transform: rotate(0deg);}
+`;
+
+const Toggle = styled.div<StyleProps>`
+  margin-right: 13px;
+  margin-top: 1px;
+  cursor: pointer;
+  ${(props) =>
+    props.show
+      ? css`
+          animation: ${OpenToggle} 0.1s ease;
+        `
+      : css`
+          animation: ${CloseToggle} 0.1s ease;
+        `}
+  transform-origin: 60% 50%;
+  transform: ${({ show }) => (show ? `rotate(90deg)` : `rotate(0deg)`)};
+  &:after {
+    display: inline-block;
+    width: 0px;
+    height: 0px;
+    content: "";
+    border-left: 11px solid ${({ theme }) => theme.text};
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+  }
+`;
+
+const HighlightBox = styled.span`
+  background-color: ${({ theme }) => theme.highlight};
+  padding: 0 4px;
+  margin: 0 2px;
+  border-radius: 4px;
+`;
+
+interface Props {
   data: Array<T.ChemicalData>;
-  clickToSearch: string;
+  clickToSearch: (e: MouseEvent<HTMLElement>) => {
+    type: "dictionay/SEARCH";
+    payload: { e: MouseEvent<HTMLElement, globalThis.MouseEvent>; };
+  };
 };
 
 const Result = ({ data, clickToSearch }: Props) => {
   let domesticN = 0;
   let overseaN = 0;
-  let VOCsFromDomestic: string[] = [];
-  let VOCsFromOverseas: string[] = [];
+  let VOCsFromDomestic: Array<string> = [];
+  let VOCsFromOverseas: Array<string> = [];
 
   const [click, setClick] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
@@ -97,13 +167,16 @@ const Result = ({ data, clickToSearch }: Props) => {
         {`${((domesticN / (domesticN + overseaN)) * 100).toFixed(2)}%`},
         해외직구은 {overseaN}개로 전체의{" "}
         {`${((overseaN / (domesticN + overseaN)) * 100).toFixed(2)}%`}을
-        차지했다. 모니터링 대상이었던 총 60종의 VOCs 가운데 국내유통
-        생리용품에서 검출된 VOCs는 총 {VOCsFromDomestic.length}종, 해외직구
-        생리용품에서 검출된 VOCs는 총 {VOCsFromOverseas.length}종이었다. 이
-        가운데 국내유통과 해외직구 모두에서 검출된 VOCs는{" "}
-        {DetectedInBoth.length}종, 국내유통에서만 검출된 VOCs는{" "}
-        {OnlyInDomestic.length}종, 해외직구에서만 검출된 VOCs는{" "}
-        {OnlyInOverseas.length}종으로 나타났다.
+        차지했다. 모니터링 대상이었던 총 60종의 VOCs 가운데
+        <HighlightBox>
+          국내유통 생리용품에서 검출된 VOCs는 총 {VOCsFromDomestic.length}종,
+          해외직구 생리용품에서 검출된 VOCs는 총 {VOCsFromOverseas.length}종이었다.
+          이 가운데 국내유통과 해외직구 모두에서 검출된 VOCs는{" "}
+          {DetectedInBoth.length}종, 국내유통에서만 검출된 VOCs는{" "}
+          {OnlyInDomestic.length}종, 해외직구에서만 검출된 VOCs는{" "}
+          {OnlyInOverseas.length}종
+        </HighlightBox>
+        으로 나타났다.
       </Paragraph>
       <TableTitle onClick={handleToggle}>
         <Toggle onClick={handleToggle} show={show} /> [표] 국내유통과 해외직구
@@ -121,65 +194,3 @@ const Result = ({ data, clickToSearch }: Props) => {
 };
 
 export default Result;
-
-const ResultWrapper = styled.section`
-  width: 840px;
-  margin: 0 auto;
-`;
-
-const Paragraph = styled.div`
-  text-align: justify;
-  line-height: 2;
-  width: 840px;
-  margin: 40px auto;
-  font-size: 20px;
-`;
-
-const TableTitle = styled.div`
-  display: flex;
-  cursor: pointer;
-  font-size: 20px;
-`;
-
-type StyleProps = {
-  show: boolean;
-};
-
-const TableBody = styled.div<StyleProps>`
-  display: ${({ show }) => (show ? `block` : `none`)};
-`;
-
-const OpenToggle = keyframes`
-  0% {transform: rotate(0deg);}
-  100% {transform: rotate(90deg);}
-`;
-
-const CloseToggle = keyframes`
-  0% {transform: rotate(90deg);}
-  100% {transform: rotate(0deg);}
-`;
-
-const Toggle = styled.div<StyleProps>`
-  margin-right: 13px;
-  margin-top: 1px;
-  cursor: pointer;
-  ${(props) =>
-    props.show
-      ? css`
-          animation: ${OpenToggle} 0.1s ease;
-        `
-      : css`
-          animation: ${CloseToggle} 0.1s ease;
-        `}
-  transform-origin: 60% 50%;
-  transform: ${({ show }) => (show ? `rotate(90deg)` : `rotate(0deg)`)};
-  &:after {
-    display: inline-block;
-    width: 0px;
-    height: 0px;
-    content: "";
-    border-left: 11px solid ${({ theme }) => theme.text};
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-  }
-`;

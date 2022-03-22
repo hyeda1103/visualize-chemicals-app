@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
 import ReactSelect, { ActionMeta, GroupTypeBase, OptionTypeBase, StylesConfig } from "react-select";
 import Result from "./Result";
-import * as T from "../../types";
+import * as T from "../../../types";
 
 const customStyles: StylesConfig<OptionTypeBase, false> = {
   control: (provided) => ({

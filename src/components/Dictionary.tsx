@@ -1,72 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
+import * as T from '../types';
 
-type Props = {
-  search: string;
-  close: boolean;
-  clickToClose: () => void;
-};
 
-// Indexable Types 설정
-type StringObj = {
-  [index: string]: string;
-};
-
-const Dictionary = ({ search, close, clickToClose }: Props) => {
-  const [termData, setTermData] = useState<StringObj[]>([]);
-  const [defintion, setDefinition] = useState("");
-  const [en, setEN] = useState("");
-  const [reference, setReference] = useState<any>([])
-
-  const getData = () => {
-    fetch("/data/Terminology.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (json) {
-        setTermData(json);
-      });
-  };
-  useEffect(() => {
-    getData();
-  }, []);
-
-  useEffect(() => {
-    termData.forEach((el) => {
-      if (el.term === search) {
-        setDefinition(el.definition);
-        setEN(el.en);
-        setReference(el.reference)
-      }
-    });
-  }, [search, termData]);
-
-  return (
-    <Section close={close}>
-      <Drag onClick={clickToClose}>{close ? "열기" : "닫기"}</Drag>
-      <Inner>
-        <KeywordWrapper>
-          용어사전
-          <SearchKeyword>{search}</SearchKeyword>
-          <English>{en}</English>
-        </KeywordWrapper>
-        <ResultWrapper>{defintion}</ResultWrapper>
-        {reference.map((item: string, idx: number) => (
-          <ReferenceWrapper key={ `${item}${idx}` }>{ item }</ReferenceWrapper>
-        ))}
-      </Inner>
-    </Section>
-  );
-};
-
-export default Dictionary;
-
-type StyleProps = {
+interface StyleProps {
   close: boolean;
 };
 
@@ -83,7 +20,7 @@ const Section = styled.section<StyleProps>`
   color: ${({ theme }) => theme.text};
   align-items: center;
   z-index: 1;
-  transition: 0.6s ease;
+  transition: 0.25s ease;
 `
 
 const Inner = styled.div`
@@ -124,3 +61,63 @@ const Drag = styled.div`
   z-index: 1;
   letter-spacing: 4px;
 `;
+
+interface Props {
+  search: string | null;
+  close: boolean;
+  clickToClose: () => void;
+};
+
+const Dictionary = ({ search, close, clickToClose }: Props) => {
+  const [termData, setTermData] = useState<T.StringObj[]>([]);
+  const [defintion, setDefinition] = useState("");
+  const [en, setEN] = useState("");
+  const [reference, setReference] = useState<any>([])
+
+  const getData = () => {
+    fetch("/data/Terminology.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (json) {
+        setTermData(json);
+      });
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    termData.forEach((el) => {
+      if (el.term === search) {
+        setDefinition(el.definition.toString());
+        setEN(el.en.toString());
+        setReference(el.reference)
+      }
+    });
+  }, [search, termData]);
+
+  return (
+    <Section close={close}>
+      <Drag onClick={clickToClose}>{close ? "열기" : "닫기"}</Drag>
+      <Inner>
+        <KeywordWrapper>
+          용어사전
+          <SearchKeyword>{search}</SearchKeyword>
+          <English>{en}</English>
+        </KeywordWrapper>
+        <ResultWrapper>{defintion}</ResultWrapper>
+        {reference.map((item: string, idx: number) => (
+          <ReferenceWrapper key={ `${item}${idx}` }>{ item }</ReferenceWrapper>
+        ))}
+      </Inner>
+    </Section>
+  );
+};
+
+export default Dictionary;

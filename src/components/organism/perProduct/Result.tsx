@@ -1,25 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, MouseEvent } from "react";
 import styled from "styled-components";
 import Table from "./Table";
-import * as T from '../../types';
+import * as T from '../../../types';
 
+
+
+const ResultWrapper = styled.section`
+  width: 960px;
+  margin: 0 auto;
+`;
+
+const Paragraph = styled.div`
+  text-align: justify;
+  line-height: 2;
+  width: 840px;
+  margin: 40px auto 80px;
+  font-size: 20px;
+`;
+
+const HighlightBox = styled.span`
+  background-color: ${({ theme }) => theme.highlight};
+  padding: 0 4px;
+  margin: 0 2px;
+  border-radius: 4px;
+`;
 
 interface Props {
   data: Array<T.ChemicalData>;
   searchResult: T.ChemicalData;
-  clickToSearch: () => void;
-};
-
-// Indexable Types 설정
-interface StringObj {
-  [index: string]: string | number;
+  clickToSearch: (e: MouseEvent<HTMLElement>) => {
+    type: "dictionay/SEARCH";
+    payload: {
+      e: MouseEvent<HTMLElement, globalThis.MouseEvent>;
+    };
+  };
 };
 
 const Result = ({ data, searchResult, clickToSearch }: Props) => {
   const [distribution, setDistribution] = useState<string | undefined>("");
   const [company, setCompany] = useState<string | undefined>("");
   const [product, setProduct] = useState<string | undefined>("");
-  const [chemicalInfo, setChemicalInfo] = useState<StringObj | undefined>(
+  const [chemicalInfo, setChemicalInfo] = useState<T.StringObj | undefined>(
     undefined
   );
 
@@ -35,10 +56,9 @@ const Result = ({ data, searchResult, clickToSearch }: Props) => {
           el[1] !== "0"
       );
 
-      const resultObj: StringObj = {};
+      const resultObj: T.StringObj = {};
       FoundVOCsInfo.map((el) => (resultObj[el[0]] = el[1]));
       setChemicalInfo(resultObj);
-
       setCompany(searchResult.company);
       setProduct(searchResult.productName);
       setDistribution(searchResult.distribution);
@@ -50,8 +70,11 @@ const Result = ({ data, searchResult, clickToSearch }: Props) => {
       {searchResult && chemicalInfo ? (
         <Paragraph>
           2020년 12월 식약처에서 총 385개의 생리용품에 대한 60종의 VOCs 모니터링
-          결과를 공개했다. 그에 따르면 {distribution}한 {company}의 {product}
-          에서 {Object.entries(chemicalInfo).length}종의 VOCs가 검출되었다.
+          결과를 공개했다. 그에 따르면
+          <HighlightBox>
+            {distribution}한 {company}의 {product}에서 {Object.entries(chemicalInfo).length}종의 VOCs가 검출
+          </HighlightBox>
+          되었다.
         </Paragraph>
       ) : null}
       {chemicalInfo ? (
@@ -66,16 +89,3 @@ const Result = ({ data, searchResult, clickToSearch }: Props) => {
 };
 
 export default Result;
-
-const ResultWrapper = styled.section`
-  width: 960px;
-  margin: 0 auto;
-`;
-
-const Paragraph = styled.div`
-  text-align: justify;
-  line-height: 2;
-  width: 840px;
-  margin: 40px auto 80px;
-  font-size: 20px;
-`;

@@ -9,6 +9,9 @@ import Toggle from "../molecule/Toggle";
 const Container = styled.header`
   width: 100%;
   height: 80px;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
   top: 0;
   left: 0;
   background: ${({ theme }) => theme.background};
@@ -23,9 +26,7 @@ const StyledBurger = styled.div<{ open: boolean }>`
   width: 30px;
   height: 20px;
   cursor: pointer;
-  position: absolute;
-  top: 0;
-  bottom: 0;
+  position: relative;
   margin: auto 0;
 
   div {
@@ -66,7 +67,6 @@ const StyledBurger = styled.div<{ open: boolean }>`
 `;
 
 const ThemeSwitch = styled.div`
-  position: absolute;
   width: 44px;
   height: 100%;
   right: 1%;
@@ -92,6 +92,7 @@ const Header = ({ handleToggle }: Props) => {
         <div />
         <div />
       </StyledBurger>
+      <h1>2020년 생리대 품질 모니터링 결과 발표</h1>
       {/* light, dark 모드 토글 */}
       <ThemeSwitch>
         <Toggle themeToggler={handleToggle} />
