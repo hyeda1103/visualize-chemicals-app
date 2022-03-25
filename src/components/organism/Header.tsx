@@ -92,7 +92,7 @@ const Header = ({ handleToggle }: Props) => {
         <div />
         <div />
       </StyledBurger>
-      <h1>2020년 생리대 품질 모니터링 결과 발표</h1>
+      <h1>2020년 생리대 품질 모니터링 결과 리포트</h1>
       {/* light, dark 모드 토글 */}
       <ThemeSwitch>
         <Toggle themeToggler={handleToggle} />

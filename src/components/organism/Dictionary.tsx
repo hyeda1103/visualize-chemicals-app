@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
-import * as T from '../types';
+import * as T from '../../types';
 
 
 interface StyleProps {
