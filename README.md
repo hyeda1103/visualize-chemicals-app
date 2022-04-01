@@ -4,7 +4,6 @@
 
 - [General Info](#general-info)
 - [Setup](#setup)
-- [Main Features](#main-features)
 - [Built with](#built-with)
 - [Status](#status)
 
