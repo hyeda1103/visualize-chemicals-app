@@ -5,7 +5,7 @@
 - [General Info](#general-info)
 - [Setup](#setup)
 - [Main Features](#main-features)
-- [Technologies](#technologies)
+- [Built with](#built-with)
 - [Status](#status)
 
 ## General Info
@@ -27,10 +27,12 @@ $ yarn
 $ yarn start
 ```
 
-## Technologies
+## Built with
 
-- This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) with TypeScript.
 - Used dependencies and versions can be found in `package.json` in the project root.
+  - `styled-components` for styling
+  - `Redux` for state management 
 
 ## Status
 
