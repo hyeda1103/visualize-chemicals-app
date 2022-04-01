@@ -1,7 +1,5 @@
 # Visualize Chemical Monitoring Results
 
-<p class="callout info">A success message</p>
-
 ## Table of contents
 
 - [General Info](#general-info)
@@ -38,4 +36,4 @@ $ yarn start
 
 ## Status
 
-The project started on April 17th, and currently in progress(Upadated on July 22nd). Feel free to contact us if you have interests in this project!
+The project started on April 17th, paused for few months, and (finally) currently in progress(Upadated on April, 1st, 2022). Feel free to contact us if you have interests in this project!
