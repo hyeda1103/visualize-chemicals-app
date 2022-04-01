@@ -27,8 +27,6 @@ $ yarn
 $ yarn start
 ```
 
-## Main Features
-
 ## Technologies
 
 - This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
