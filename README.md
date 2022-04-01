@@ -1,6 +1,6 @@
 # Visualize Chemical Monitoring Results
 
-<span style='font-size: '36px'; background-color: 'red''>Currently in progress</span>
+<p class="callout info">A success message</p>
 
 ## Table of contents
 
