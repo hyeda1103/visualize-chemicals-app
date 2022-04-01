@@ -36,4 +36,4 @@ $ yarn start
 
 ## Status
 
-The project started on April 17th, paused for few months, and (finally) currently in progress(Upadated on April, 1st, 2022). Feel free to contact us if you have interests in this project!
+The project started on April 17th, paused for few months, and (finally) **currently in progress(Upadated on April, 1st, 2022)**. Feel free to contact us if you have interests in this project!
