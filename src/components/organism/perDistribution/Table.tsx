@@ -1,6 +1,8 @@
-import React, { MouseEvent } from "react";
+import React, { MouseEvent, useState, useEffect } from "react";
 import styled from "styled-components";
+
 import * as T from '../../../types';
+import { Max, Mean, Median, Min, SD } from "../../../utils";
 
 const GridContainer = styled.section`
   display: flex;
@@ -119,8 +121,8 @@ const Box = styled.span`
 `;
 
 interface Props {
-  data: Array<T.ChemicalData>;
-  detectedInBoth: Array<string>;
+  chemicalData: Array<T.ChemicalData>;
+  detectedOnBoth: Array<string>;
   clickToSearch: (e: MouseEvent<HTMLElement>) => {
     type: "dictionay/SEARCH";
     payload: {
@@ -129,112 +131,91 @@ interface Props {
   };
 };
 
-const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
-  let table = detectedInBoth.map((chemical) => {
-    let domestic: Array<number> = [];
-    let overseas: Array<number> = [];
-    data.map((product) => {
-      if (product.distribution === "국내유통") {
-        let arr = Object.entries(product);
-        arr.map((el) => {
-          if (el[0] === chemical && el[1] !== "0") {
-            domestic.push(Number(el[1]));
-          }
-          return el;
-        });
-      } else {
-        let arr = Object.entries(product);
-        arr.map((el) => {
-          if (el[0] === chemical && el[1] !== "0") {
-            overseas.push(Number(el[1]));
-          }
-          return el;
-        });
-      }
-      return product;
-    });
+function Table({ chemicalData, detectedOnBoth, clickToSearch }: Props) {
+  const [table, setTable] = useState<Array<T.ResultPerDistribution>>([]);
+  
+  useEffect(() => {
+    const tableInfo = detectedOnBoth.map((chemicalDetected) => {
+      const domesticProductsIngredientContent: Array<number> = []
+      const overseaProductsIngredientContent: Array<number> = []
+      chemicalData.forEach((product) => {
+        if (product.distribution === T.Distribution.DOMESTIC) {
+          Object.entries(product).forEach((chemicalInfo) => {
+            const chemicalName = chemicalInfo[0]
+            const ingredientContent = Number(chemicalInfo[1])
+            if (chemicalName === chemicalDetected && ingredientContent > 0) domesticProductsIngredientContent.push(ingredientContent)
+          })
+        } else if (product.distribution === T.Distribution.OVERSEA) {
+          Object.entries(product).forEach((chemicalInfo) => {
+            const chemicalName = chemicalInfo[0]
+            const ingredientContent = Number(chemicalInfo[1])
+            if (chemicalName === chemicalDetected && ingredientContent > 0) overseaProductsIngredientContent.push(ingredientContent)
+          })
+        }
+      })
+      // 해당 화학물질이 검출된 제품 수 계산
+      const NumOfDomesticProducts = domesticProductsIngredientContent.length;
+      const NumOfOverseaProducts = overseaProductsIngredientContent.length;
 
-    // 오름차순으로 정렬
-    domestic.sort((a, b) => a - b);
-    overseas.sort((a, b) => a - b);
+      // 해당 화학물질이 검출된 제품 수의 비율
+      const PercentOfDomestic = ((Number(NumOfDomesticProducts) / 365) * 100).toFixed(2);
+      const PercentOfOversea = ((Number(NumOfOverseaProducts) / 20) * 100).toFixed(2);
 
-    // 해당 화학물질이 검출된 제품 수 계산
-    let NofDomestic = domestic.length;
-    let NofOverseas = overseas.length;
+      // 해당 화학물질에 대한 평균값 계산
+      const meanOfDomestic = Mean(domesticProductsIngredientContent)
+      const meanOfOversea = Mean(overseaProductsIngredientContent)
 
-    // 해당 화학물질이 검출된 제품 수의 비율
-    let PercentOfDomestic = ((Number(NofDomestic) / 365) * 100).toFixed(2);
-    let PercentOfOverseas = ((Number(NofOverseas) / 20) * 100).toFixed(2);
+      // 해당 화학물질에 대한 중앙값 계산
+      const medianOfDomestic = Median(domesticProductsIngredientContent)
+      const medianOfOversea = Median(overseaProductsIngredientContent)
 
-    // 해당 화학물질에 대한 평균값 계산
-    let meanOfDomestic = domestic
-      .reduce((acc, curr, i, { length }) => {
-        return i === length - 1 ? (acc + curr) / length : acc + curr;
-      }, 0)
-      .toFixed(2);
-    let meanOfOverseas = overseas
-      .reduce((acc, curr, i, { length }) => {
-        return i === length - 1 ? (acc + curr) / length : acc + curr;
-      }, 0)
-      .toFixed(2);
+      // 해당 화학물질에 대한 표준편차 계산
+      const SDofDomestic = SD(domesticProductsIngredientContent, meanOfDomestic)
+      const SDofOversea = SD(overseaProductsIngredientContent, meanOfOversea)
 
-    // 해당 화학물질에 대한 중앙값 계산
-    let medianOfDomestic =
-      domestic.length !== 1
-        ? (
-            (domestic[Math.floor(domestic.length / 2)] +
-              domestic[Math.ceil(domestic.length / 2)]) /
-            2
-          ).toFixed(2)
-        : domestic[0];
-    let medianOfOverseas =
-      overseas.length !== 1
-        ? (
-            (overseas[Math.floor(overseas.length / 2)] +
-              overseas[Math.ceil(overseas.length / 2)]) /
-            2
-          ).toFixed(2)
-        : overseas[0];
+      // 해당 화학물질에 대한 최솟값 계산
+      const minOfDomestic = Min(domesticProductsIngredientContent)
+      const minOfOversea = Min(overseaProductsIngredientContent)
 
-    // 해당 화학물질에 대한 표준편차 계산
-    let SDofDomestic = Math.sqrt(
-      domestic
-        .map((x) => Math.pow(x - Number(meanOfDomestic), 2))
-        .reduce((acc, curr, i, { length }) => {
-          return i === length - 1 ? (acc + curr) / length : acc + curr;
-        }, 0)
-    ).toFixed(2);
-    let SDofOverseas = Math.sqrt(
-      overseas
-        .map((x) => Math.pow(x - Number(meanOfOverseas), 2))
-        .reduce((acc, curr, i, { length }) => {
-          return i === length - 1 ? (acc + curr) / length : acc + curr;
-        }, 0)
-    ).toFixed(2);
+      // 해당 화학물질에 대한 최댓값 계산
+      const maxOfDomestic = Max(domesticProductsIngredientContent)
+      const maxOfOversea = Max(overseaProductsIngredientContent)
 
-    // 해당 화학물질에 대한 최솟값 계산
-    let minOfDomestic = Math.min(...domestic).toFixed(2);
-    let minOfOverseas = Math.min(...overseas).toFixed(2);
-
-    // 해당 화학물질에 대한 최댓값 계산
-    let maxOfDomestic = Math.max(...domestic).toFixed(2);
-    let maxOfOverseas = Math.max(...overseas).toFixed(2);
-
-    return {
-      chemicalName: chemical,
-      number: { domestic: NofDomestic, overseas: NofOverseas },
-      percentage: {
-        domestic: PercentOfDomestic,
-        overseas: PercentOfOverseas,
-      },
-      mean: { domestic: meanOfDomestic, overseas: meanOfOverseas },
-      median: { domestic: medianOfDomestic, overseas: medianOfOverseas },
-      SD: { domestic: SDofDomestic, overseas: SDofOverseas },
-      min: { domestic: minOfDomestic, overseas: minOfOverseas },
-      max: { domestic: maxOfDomestic, overseas: maxOfOverseas },
-    };
-  });
-
+      return {
+        chemicalName: chemicalDetected,
+        number: {
+          domestic: NumOfDomesticProducts,
+          oversea: NumOfOverseaProducts
+        },
+        percentage: {
+          domestic: PercentOfDomestic,
+          oversea: PercentOfOversea,
+        },
+        mean: {
+          domestic: meanOfDomestic,
+          oversea: meanOfOversea
+        },
+        median: {
+          domestic: medianOfDomestic,
+          oversea: medianOfOversea
+        },
+        SD: {
+          domestic: SDofDomestic,
+          oversea: SDofOversea
+        },
+        min: {
+          domestic: minOfDomestic,
+          oversea: minOfOversea
+        },
+        max: {
+          domestic: maxOfDomestic,
+          oversea: maxOfOversea
+        },
+      };
+    })
+    setTable(tableInfo)
+  }, [chemicalData, detectedOnBoth])
+  
   return (
     <GridContainer>
       <Row>
@@ -258,35 +239,33 @@ const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
           <Box onClick={clickToSearch}>최댓값</Box>
         </TD>
       </Row>
-      {table
-        ? table.map((el) => (
-            <Row key={el.chemicalName}>
-              <CH>
-                <Box onClick={clickToSearch}>{el.chemicalName}</Box>
-              </CH>
-              <CD>국내</CD>
-              <CD>
-                {el.number.domestic}{" "}
-                <Percent>({el.percentage.domestic}%)</Percent>
-              </CD>
-              <CD>{el.mean.domestic}</CD>
-              <CD>{el.median.domestic}</CD>
-              <CD>{el.SD.domestic}</CD>
-              <CD>{el.min.domestic}</CD>
-              <CD>{el.max.domestic}</CD>
-              <CD>해외</CD>
-              <CD>
-                {el.number.overseas}{" "}
-                <Percent>({el.percentage.overseas}%)</Percent>
-              </CD>
-              <CD>{el.mean.overseas}</CD>
-              <CD>{el.median.overseas}</CD>
-              <CD>{el.SD.overseas}</CD>
-              <CD>{el.min.overseas}</CD>
-              <CD>{el.max.overseas}</CD>
-            </Row>
-          ))
-        : null}
+      {table.map((el) => (
+        <Row key={el.chemicalName}>
+          <CH>
+            <Box onClick={clickToSearch}>{el.chemicalName}</Box>
+          </CH>
+          <CD>국내</CD>
+          <CD>
+            {el.number.domestic}{" "}
+            <Percent>({el.percentage.domestic}%)</Percent>
+          </CD>
+          <CD>{el.mean.domestic}</CD>
+          <CD>{el.median.domestic}</CD>
+          <CD>{el.SD.domestic}</CD>
+          <CD>{el.min.domestic}</CD>
+          <CD>{el.max.domestic}</CD>
+          <CD>해외</CD>
+          <CD>
+            {el.number.oversea}{" "}
+            <Percent>({el.percentage.oversea}%)</Percent>
+          </CD>
+          <CD>{el.mean.oversea}</CD>
+          <CD>{el.median.oversea}</CD>
+          <CD>{el.SD.oversea}</CD>
+          <CD>{el.min.oversea}</CD>
+          <CD>{el.max.oversea}</CD>
+        </Row>
+      ))}
     </GridContainer>
   );
 };

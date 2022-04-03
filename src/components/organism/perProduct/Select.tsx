@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
-import ReactSelect, { ActionMeta, GroupTypeBase, OptionTypeBase, StylesConfig } from "react-select";
+import ReactSelect, { ActionMeta, StylesConfig, OptionTypeBase, GroupTypeBase } from "react-select";
+
 import Result from "./Result";
 import * as T from "../../../types";
 
@@ -59,7 +60,7 @@ interface Props {
   ChemicalData: Array<T.ChemicalData>;
 };
 
-const SelectBox = ({ clickToSearch, ChemicalData }: Props) => {
+function SelectBox({ clickToSearch, ChemicalData }: Props) {
   const [Options, setOptions] = useState<{
     DistributionOpts: (OptionTypeBase | GroupTypeBase<OptionTypeBase>)[] | undefined,
     CompanyOpts: (OptionTypeBase | GroupTypeBase<OptionTypeBase>)[] | undefined,
@@ -177,11 +178,13 @@ const SelectBox = ({ clickToSearch, ChemicalData }: Props) => {
           })}
         />
       </SelectWrapper>
-      {result && <Result
-        clickToSearch={clickToSearch}
-        data={ChemicalData}
-        searchResult={result}
-      />}
+      {result && (
+        <Result
+          clickToSearch={clickToSearch}
+          data={ChemicalData}
+          searchResult={result}
+        />
+      )}
     </>
   );
 };

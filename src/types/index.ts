@@ -66,11 +66,105 @@ export interface ChemicalData {
   "1-부탄올": string;
 };
 
+export type KeyOfChemicalData = keyof ChemicalData;
+
+export enum Usage {
+  DISPOSABLE = '일회용',
+  REUSABLE = '다회용'
+}
+
+export enum Distribution {
+  DOMESTIC = '국내유통',
+  OVERSEA = '해외직구'
+}
+
 export interface Option {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 export interface StringObj {
   [index: string]: string | number;
 };
+
+export interface ResultPerProduct {
+  chemicalName: string;
+  target: string | number;
+  mean: string;
+  median: string;
+  SD: string;
+  min: string;
+  max: string;
+}
+
+export interface ResultPerUsage {
+  chemicalName: string,
+  number: {
+    disposable: number,
+    reusable: number
+  },
+  percentage: {
+    disposable: string,
+    reusable: string,
+  },
+  mean: {
+    disposable: string,
+    reusable: string
+  },
+  median: {
+    disposable: string,
+    reusable: string
+  },
+  SD: {
+    disposable: string,
+    reusable: string
+  },
+  min: {
+    disposable: string,
+    reusable: string
+  },
+  max: {
+    disposable: string,
+    reusable: string
+  },
+};
+
+export interface ResultPerDistribution {
+  chemicalName: string,
+  number: {
+    domestic: number,
+    oversea: number
+  },
+  percentage: {
+    domestic: string,
+    oversea: string,
+  },
+  mean: {
+    domestic: string,
+    oversea: string
+  },
+  median: {
+    domestic: string,
+    oversea: string
+  },
+  SD: {
+    domestic: string,
+    oversea: string
+  },
+  min: {
+    domestic: string,
+    oversea: string
+  },
+  max: {
+    domestic: string,
+    oversea: string
+  },
+};
+
+export interface Term {
+  definition: string,
+  en: string
+  mathematicalExpression: string | null
+  reference: Array<string>
+  term: string
+}

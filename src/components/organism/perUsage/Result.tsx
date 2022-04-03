@@ -1,6 +1,7 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 import styled, { keyframes, css } from "styled-components";
-import { ChemicalData } from "../../../types";
+
+import * as T from "../../../types";
 import Table from "./Table";
 
 
@@ -74,7 +75,7 @@ const HighlightBox = styled.span`
 `;
 
 interface Props {
-  data: Array<ChemicalData>;
+  chemicalData: Array<T.ChemicalData>;
   clickToSearch: (e: MouseEvent<HTMLElement>) => {
     type: "dictionay/SEARCH";
     payload: {
@@ -83,111 +84,115 @@ interface Props {
   };
 };
 
-const Result = ({ data, clickToSearch }: Props) => {
-  let disposableN = 0;
-  let reusableN = 0;
-  let VOCsFromDisposable: Array<string> = [];
-  let VOCsFromReusable: Array<string> = [];
+function Result ({ chemicalData, clickToSearch }: Props) {
+  const [disposableProducts, setDisposableProducts] = useState<Array<T.ChemicalData>>()
+  const [reusableProducts, setReusableProducts] = useState<Array<T.ChemicalData>>()
+  const [NumOfDisposableProducts, setNumOfDisposableProducts] = useState<number>()
+  const [NumOfReusableProducts, setNumOfReusableProducts] = useState<number>()
+  const [PercentOfDisposableProducts, setPercentOfDisposableProducts] = useState<string>()
+  const [PercentOfReusableProducts, setPercentOfReusableProducts] = useState<string>()
+  const [VOCsFromDisposableProducts, setVOCsFromDisposableProducts] = useState<Array<string>>([])
+  const [VOCsFromReusableProducts, setVOCsFromReusableProducts] = useState<Array<string>>([])
 
-  const [click, setClick] = useState<boolean>(false);
+  const [OnlyInDisposableProducts, setOnlyInDisposableProducts] = useState<Array<string>>([])
+  const [OnlyInReusableProducts, setOnlyInReusableProducts] = useState<Array<string>>([])
+  const [DetectedOnBoth, setDetectedOnBoth] = useState<Array<string>>([])
   const [show, setShow] = useState<boolean>(false);
 
-  const handleToggle = () => setClick(!click);
+  const handleToggle = () => setShow(!show);
+  
+  useEffect(() => {
+    const disposableProducts = chemicalData.filter((product) => product.usage === T.Usage.DISPOSABLE)
+    setDisposableProducts(disposableProducts)
+    const reusableProducts = chemicalData.filter((product) => product.usage === T.Usage.REUSABLE)
+    setReusableProducts(reusableProducts)
+    setNumOfDisposableProducts(disposableProducts.length)
+    setNumOfReusableProducts(reusableProducts.length)    
+  }, [chemicalData])
+  
+  useEffect(() => {
+    if (NumOfDisposableProducts === undefined) return;
+    if (NumOfReusableProducts === undefined) return;
+    const percentageOfDisposableProducts = ((NumOfDisposableProducts / (NumOfDisposableProducts + NumOfReusableProducts)) * 100).toFixed(2)
+    const percentageOfReuableProducts = ((NumOfReusableProducts / (NumOfDisposableProducts + NumOfReusableProducts)) * 100).toFixed(2)
+
+    setPercentOfDisposableProducts(`${percentageOfDisposableProducts}%`)
+    setPercentOfReusableProducts(`${percentageOfReuableProducts}%`)
+  }, [NumOfDisposableProducts, NumOfReusableProducts])
 
   useEffect(() => {
-    click ? setShow(true) : setShow(false);
-  }, [click]);
-
-  data.map((product) =>
-    product.usage === "일회용" ? disposableN++ : reusableN++
-  );
-
-  for (let i = 0; i < data.length; i++) {
-    let product = data[i];
-    if (product.usage === "일회용") {
-      let arr = Object.entries(product);
-      for (let i = 0; i < arr.length; i++) {
-        let key = arr[i][0];
-        let value = arr[i][1];
-        if (value !== "0") {
-          if (
-            key !== "index" &&
-            key !== "distribution" &&
-            key !== "company" &&
-            key !== "productName" &&
-            key !== "usage"
-          ) {
-            VOCsFromDisposable.push(key);
-          }
+    if (disposableProducts === undefined) return;
+    if (reusableProducts === undefined) return;
+    disposableProducts.forEach((product) => {
+      const chemicalInfo = Object.entries(product) 
+      chemicalInfo.forEach((singleChemical) => {
+        const chemicalName = singleChemical[0]
+        const ingredientContent = Number(singleChemical[1])
+        if (!['index', 'distribution', 'company', 'productName', 'usage'].includes(chemicalName)
+          && ingredientContent > 0 && VOCsFromDisposableProducts.indexOf(chemicalName) === -1) {
+          setVOCsFromDisposableProducts([...VOCsFromDisposableProducts, chemicalName])
         }
-      }
-    } else {
-      let arr = Object.entries(product);
-      for (let i = 0; i < arr.length; i++) {
-        let key = arr[i][0];
-        let value = arr[i][1];
-        if (value !== "0") {
-          if (
-            key !== "index" &&
-            key !== "distribution" &&
-            key !== "company" &&
-            key !== "productName" &&
-            key !== "usage"
-          ) {
-            VOCsFromReusable.push(key);
-          }
+      })
+    })
+    reusableProducts.forEach((product) => {
+      const chemicalInfo = Object.entries(product) 
+      chemicalInfo.forEach((singleChemical) => {
+        const chemicalName = singleChemical[0]
+        const ingredientContent = Number(singleChemical[1])
+        if (!['index', 'distribution', 'company', 'productName', 'usage'].includes(chemicalName)
+          && ingredientContent > 0 && VOCsFromReusableProducts.indexOf(chemicalName) === -1) {
+          setVOCsFromReusableProducts([...VOCsFromReusableProducts, chemicalName])
         }
-      }
-    }
-  }
+      })
+    })
+  }, [disposableProducts, reusableProducts, VOCsFromDisposableProducts, VOCsFromReusableProducts])
 
-  VOCsFromDisposable = VOCsFromDisposable.filter(
-    (v, i, arr) => arr.indexOf(v) === i
-  );
-  VOCsFromReusable = VOCsFromReusable.filter(
-    (v, i, arr) => arr.indexOf(v) === i
-  );
+  useEffect(() => {
+    // 일회용 생리용품에서만 검출된 VOCs
+    const OnlyInDisposable = VOCsFromDisposableProducts.filter(
+      (x) => !VOCsFromReusableProducts.includes(x)
+    );
+    setOnlyInDisposableProducts(OnlyInDisposable)
+    // 다회용 생리용품에서만 검출된 VOCs
+    const OnlyInReusable = VOCsFromReusableProducts.filter(
+      (x) => !VOCsFromDisposableProducts.includes(x)
+    );
+    setOnlyInReusableProducts(OnlyInReusable)
+    // 일외용과 다회용 모두에서 검출된 VOCs
+    const DetectedOnBoth = VOCsFromDisposableProducts.filter((x) =>
+      VOCsFromReusableProducts.includes(x)
+    );
+    setDetectedOnBoth(DetectedOnBoth)
+  }, [VOCsFromDisposableProducts, VOCsFromReusableProducts])
 
-  // 일회용 생리용품에서만 검출된 VOCs
-  let OnlyInDisposable = VOCsFromDisposable.filter(
-    (x) => !VOCsFromReusable.includes(x)
-  );
-  // 다회용 생리용품에서만 검출된 VOCs
-  let OnlyInReusable = VOCsFromReusable.filter(
-    (x) => !VOCsFromDisposable.includes(x)
-  );
-  // 일외용과 다회용 모두에서 검출된 VOCs
-  let DetectedInBoth = VOCsFromDisposable.filter((x) =>
-    VOCsFromReusable.includes(x)
-  );
 
   return (
     <ResultWrapper>
       <Paragraph>
         2020년 12월 식약처에서 모니터링한 총 385개의 생리용품 가운데 일회용은{" "}
-        {disposableN}개로 전체의{" "}
-        {`${((disposableN / (disposableN + reusableN)) * 100).toFixed(2)}%`},
-        다회용은 {reusableN}개로 전체의{" "}
-        {`${((reusableN / (disposableN + reusableN)) * 100).toFixed(2)}%`}을
+        {NumOfDisposableProducts}개로 전체의{" "}
+        {PercentOfDisposableProducts},
+        다회용은 {NumOfReusableProducts}개로 전체의{" "}
+        {PercentOfReusableProducts}을
         차지했다. 모니터링 대상이었던 총 60종의 VOCs 가운데
         <HighlightBox>
-          일회용 생리용품에서 검출된 VOCs는 총 {VOCsFromDisposable.length}종,
-          다회용 생리용품에서 검출된 VOCs는 총 {VOCsFromReusable.length}종이었다.
-          이 가운데 일회용과 다회용 모두에서 검출된 VOCs는 {DetectedInBoth.length}종,
-          일회용에서만 검출된 VOCs는 {OnlyInDisposable.length}종,
-          다회용에서만 검출된 VOCs는 {OnlyInReusable.length}종으로
+          일회용 생리용품에서 검출된 VOCs는 총 {VOCsFromDisposableProducts.length}종,
+          다회용 생리용품에서 검출된 VOCs는 총 {VOCsFromReusableProducts.length}종이었다.
+          이 가운데 일회용과 다회용 모두에서 검출된 VOCs는 {DetectedOnBoth.length}종,
+          일회용에서만 검출된 VOCs는 {OnlyInDisposableProducts.length}종,
+          다회용에서만 검출된 VOCs는 {OnlyInReusableProducts.length}종으로
           다회용에서 검출된 VOCs 모두 일회용에서도 검출
         </HighlightBox>
         된 것으로 나타났다.
       </Paragraph>
       <TableTitle onClick={handleToggle}>
         <Toggle onClick={handleToggle} show={show} /> [표] 일회용과 다회용
-        생리용품에서 모두 검출된 {DetectedInBoth.length}종의 VOCs에 대한 통계
+        생리용품에서 모두 검출된 {DetectedOnBoth.length}종의 VOCs에 대한 통계
       </TableTitle>
       <TableBody show={show}>
         <Table
-          data={data}
-          detectedInBoth={DetectedInBoth}
+          chemicalData={chemicalData}
+          detectedOnBoth={DetectedOnBoth}
           clickToSearch={clickToSearch}
         />
       </TableBody>

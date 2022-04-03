@@ -1,15 +1,16 @@
-import React, { useState, useEffect, Suspense, MouseEvent, FC } from 'react'
+import React, { useState, useEffect, Suspense, MouseEvent } from 'react'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
 import ReactGA from 'react-ga'
 import { useSelector, useDispatch } from 'react-redux'
+import styled, { ThemeProvider } from 'styled-components'
+
 import { RootState } from './modules'
 import { handleSearch, handleClose } from './modules/dictionary'
 import { handleSideBar } from './modules/sideBar'
-import styled, { ThemeProvider } from 'styled-components'
 import { lightTheme, darkTheme } from './Theme'
 import GlobalStyle from './globalStyles'
-import LoadingPage from './components/pages/loading'
-import ScrollToTop from './ScrollToTop'
+import LoadingPage from './components/pages/Load'
+import ScrollToTop from './components/atom/ScrollToTop'
 import Header from './components/organism/Header'
 import Dictionary from './components/organism/Dictionary'
 import VOCsPerProduct from './components/pages/VOCsPerProduct'
@@ -29,7 +30,7 @@ const DimmedOut = styled.div<{ open: boolean }>`
   z-index: 2;
 `
 
-const App: FC = () => {
+function App() {
   const [theme, setTheme] = useState('light')
   const open = useSelector((state: RootState) => state.sideBar.open)
   const search = useSelector((state: RootState) => state.dictionary.search)

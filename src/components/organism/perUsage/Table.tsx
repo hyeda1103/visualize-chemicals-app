@@ -1,6 +1,8 @@
-import React, { MouseEvent } from "react";
+import React, { useState, MouseEvent, useEffect } from "react";
 import styled from "styled-components";
+
 import * as T from '../../../types'
+import { Max, Mean, Median, Min, SD } from "../../../utils";
 
 
 const GridContainer = styled.section`
@@ -121,8 +123,8 @@ const Box = styled.span`
 
 
 interface Props {
-  data: Array<T.ChemicalData>;
-  detectedInBoth: Array<string>;
+  chemicalData: Array<T.ChemicalData>;
+  detectedOnBoth: Array<string>;
   clickToSearch: (e: MouseEvent<HTMLElement>) => {
     type: "dictionay/SEARCH";
     payload: {
@@ -131,110 +133,90 @@ interface Props {
   };
 };
 
-const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
-  let table = detectedInBoth.map((chemical) => {
-    let disposable: Array<number> = [];
-    let reusable: Array<number> = [];
-    data.map((product) => {
-      if (product.usage === "일회용") {
-        let arr = Object.entries(product);
-        arr.map((el) => {
-          if (el[0] === chemical && el[1] !== "0") {
-            disposable.push(Number(el[1]));
-          }
-          return el;
-        });
-      } else {
-        let arr = Object.entries(product);
-        arr.map((el) => {
-          if (el[0] === chemical && el[1] !== "0") {
-            reusable.push(Number(el[1]));
-          }
-          return el;
-        });
-      }
-      return product;
-    });
-    // 오름차순으로 정렬
-    disposable.sort((a, b) => a - b);
-    reusable.sort((a, b) => a - b);
+function Table({ chemicalData, detectedOnBoth, clickToSearch }: Props) {
+  const [table, setTable] = useState<Array<T.ResultPerUsage>>([]);
 
-    // 해당 화학물질이 검출된 제품 수 계산
-    let NofDisposable = disposable.length;
-    let NofReusable = reusable.length;
+  useEffect(() => {
+    const tableInfo = detectedOnBoth.map((chemicalDetected) => {
+      const disposableIngredientContent: Array<number> = []
+      const reusableIngredientContent: Array<number> = []
+      chemicalData.forEach((product) => {
+        if (product.usage === T.Usage.DISPOSABLE) {
+          Object.entries(product).forEach((chemicalInfo) => {
+            const chemicalName = chemicalInfo[0]
+            const ingredientContent = Number(chemicalInfo[1])
+            if (chemicalName === chemicalDetected && ingredientContent > 0) disposableIngredientContent.push(ingredientContent)
+          })
+        } else if (product.usage === T.Usage.REUSABLE) {
+          Object.entries(product).forEach((chemicalInfo) => {
+            const chemicalName = chemicalInfo[0]
+            const ingredientContent = Number(chemicalInfo[1])
+            if (chemicalName === chemicalDetected && ingredientContent > 0) reusableIngredientContent.push(ingredientContent)
+          })
+        }
+      })
+      // 해당 화학물질이 검출된 제품 수 계산
+      const NumOfDisposableProducts = disposableIngredientContent.length;
+      const NumOfReusableProducts = reusableIngredientContent.length;
 
-    // 해당 화학물질이 검출된 제품 수의 비율
-    let PercentOfDisposable = ((Number(NofDisposable) / 333) * 100).toFixed(2);
-    let PercentOfReusable = ((Number(NofReusable) / 52) * 100).toFixed(2);
+      // 해당 화학물질이 검출된 제품 수의 비율
+      const PercentOfDisposable = ((Number(NumOfDisposableProducts) / 333) * 100).toFixed(2);
+      const PercentOfReusable = ((Number(NumOfReusableProducts) / 52) * 100).toFixed(2);
 
-    // 해당 화학물질에 대한 평균값 계산
-    let meanOfDisposable = disposable
-      .reduce((acc, curr, i, { length }) => {
-        return i === length - 1 ? (acc + curr) / length : acc + curr;
-      }, 0)
-      .toFixed(2);
-    let meanOfReusable = reusable
-      .reduce((acc, curr, i, { length }) => {
-        return i === length - 1 ? (acc + curr) / length : acc + curr;
-      }, 0)
-      .toFixed(2);
+      // 해당 화학물질에 대한 평균값 계산
+      const meanOfDisposable = Mean(disposableIngredientContent)
+      const meanOfReusable = Mean(reusableIngredientContent)
 
-    // 해당 화학물질에 대한 중앙값 계산
-    let medianOfDisposable =
-      disposable.length !== 1
-        ? (
-            (disposable[Math.floor(disposable.length / 2)] +
-              disposable[Math.ceil(disposable.length / 2)]) /
-            2
-          ).toFixed(2)
-        : disposable[0];
-    let medianOfReusable =
-      reusable.length !== 1
-        ? (
-            (reusable[Math.floor(reusable.length / 2)] +
-              reusable[Math.ceil(reusable.length / 2)]) /
-            2
-          ).toFixed(2)
-        : reusable[0];
+      // 해당 화학물질에 대한 중앙값 계산
+      const medianOfDisposable = Median(disposableIngredientContent)
+      const medianOfReusable = Median(reusableIngredientContent)
 
-    // 해당 화학물질에 대한 표준편차 계산
-    let SDofDisposable = Math.sqrt(
-      disposable
-        .map((x) => Math.pow(x - Number(meanOfDisposable), 2))
-        .reduce((acc, curr, i, { length }) => {
-          return i === length - 1 ? (acc + curr) / length : acc + curr;
-        }, 0)
-    ).toFixed(2);
-    let SDofReusable = Math.sqrt(
-      reusable
-        .map((x) => Math.pow(x - Number(meanOfReusable), 2))
-        .reduce((acc, curr, i, { length }) => {
-          return i === length - 1 ? (acc + curr) / length : acc + curr;
-        }, 0)
-    ).toFixed(2);
+      // 해당 화학물질에 대한 표준편차 계산
+      const SDofDisposable = SD(disposableIngredientContent, meanOfDisposable)
+      const SDofReusable = SD(reusableIngredientContent, meanOfReusable)
 
-    // 해당 화학물질에 대한 최솟값 계산
-    let minOfDisposable = Math.min(...disposable).toFixed(2);
-    let minOfReusable = Math.min(...reusable).toFixed(2);
+      // 해당 화학물질에 대한 최솟값 계산
+      const minOfDisposable = Min(disposableIngredientContent)
+      const minOfReusable = Min(reusableIngredientContent)
 
-    // 해당 화학물질에 대한 최댓값 계산
-    let maxOfDisposable = Math.max(...disposable).toFixed(2);
-    let maxOfReusable = Math.max(...reusable).toFixed(2);
+      // 해당 화학물질에 대한 최댓값 계산
+      const maxOfDisposable = Max(disposableIngredientContent)
+      const maxOfReusable = Max(reusableIngredientContent)
 
-    return {
-      chemicalName: chemical,
-      number: { disposable: NofDisposable, reusable: NofReusable },
-      percentage: {
-        disposable: PercentOfDisposable,
-        reusable: PercentOfReusable,
-      },
-      mean: { disposable: meanOfDisposable, reusable: meanOfReusable },
-      median: { disposable: medianOfDisposable, reusable: medianOfReusable },
-      SD: { disposable: SDofDisposable, reusable: SDofReusable },
-      min: { disposable: minOfDisposable, reusable: minOfReusable },
-      max: { disposable: maxOfDisposable, reusable: maxOfReusable },
-    };
-  });
+      return {
+        chemicalName: chemicalDetected,
+        number: {
+          disposable: NumOfDisposableProducts,
+          reusable: NumOfReusableProducts
+        },
+        percentage: {
+          disposable: PercentOfDisposable,
+          reusable: PercentOfReusable,
+        },
+        mean: {
+          disposable: meanOfDisposable,
+          reusable: meanOfReusable
+        },
+        median: {
+          disposable: medianOfDisposable,
+          reusable: medianOfReusable
+        },
+        SD: {
+          disposable: SDofDisposable,
+          reusable: SDofReusable
+        },
+        min: {
+          disposable: minOfDisposable,
+          reusable: minOfReusable
+        },
+        max: {
+          disposable: maxOfDisposable,
+          reusable: maxOfReusable
+        },
+      };
+    })
+    setTable(tableInfo)
+  }, [chemicalData, detectedOnBoth])
 
   return (
     <GridContainer>
@@ -257,35 +239,33 @@ const Table = ({ data, detectedInBoth, clickToSearch }: Props) => {
           <Box onClick={clickToSearch}>최댓값</Box>
         </TD>
       </Row>
-      {table
-        ? table.map((el) => (
-            <Row key={el.chemicalName}>
-              <CH>
-                <Box onClick={clickToSearch}>{el.chemicalName}</Box>
-              </CH>
-              <CD>일회용</CD>
-              <CD>
-                {el.number.disposable}{" "}
-                <Percent>({el.percentage.disposable}%)</Percent>
-              </CD>
-              <CD>{el.mean.disposable}</CD>
-              <CD>{el.median.disposable}</CD>
-              <CD>{el.SD.disposable}</CD>
-              <CD>{el.min.disposable}</CD>
-              <CD>{el.max.disposable}</CD>
-              <CD>다회용</CD>
-              <CD>
-                {el.number.reusable}{" "}
-                <Percent>({el.percentage.reusable}%)</Percent>
-              </CD>
-              <CD>{el.mean.reusable}</CD>
-              <CD>{el.median.reusable}</CD>
-              <CD>{el.SD.reusable}</CD>
-              <CD>{el.min.reusable}</CD>
-              <CD>{el.max.reusable}</CD>
-            </Row>
-          ))
-        : null}
+      {table.map((el) => (
+        <Row key={el.chemicalName}>
+          <CH>
+            <Box onClick={clickToSearch}>{el.chemicalName}</Box>
+          </CH>
+          <CD>일회용</CD>
+          <CD>
+            {el.number.disposable}{" "}
+            <Percent>({el.percentage.disposable}%)</Percent>
+          </CD>
+          <CD>{el.mean.disposable}</CD>
+          <CD>{el.median.disposable}</CD>
+          <CD>{el.SD.disposable}</CD>
+          <CD>{el.min.disposable}</CD>
+          <CD>{el.max.disposable}</CD>
+          <CD>다회용</CD>
+          <CD>
+            {el.number.reusable}{" "}
+            <Percent>({el.percentage.reusable}%)</Percent>
+          </CD>
+          <CD>{el.mean.reusable}</CD>
+          <CD>{el.median.reusable}</CD>
+          <CD>{el.SD.reusable}</CD>
+          <CD>{el.min.reusable}</CD>
+          <CD>{el.max.reusable}</CD>
+        </Row>
+      ))}
     </GridContainer>
   );
 };
