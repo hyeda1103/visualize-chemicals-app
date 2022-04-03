@@ -1,6 +1,7 @@
 # Visualize Chemical Monitoring Results
 
 - Check demo (currently in progress) on the following link: [https://serene-wing-559567.netlify.app/](https://serene-wing-559567.netlify.app/) 
+- Check project status board on the following link: [https://github.com/hyeda1103/visualize-chemicals-app/projects/1](https://github.com/hyeda1103/visualize-chemicals-app/projects/1)
 
 ## Table of contents
 
