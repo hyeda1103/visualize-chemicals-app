@@ -1,8 +1,9 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 import styled from "styled-components/macro";
+
 import SelectBox from "./Select";
-import * as T from '../../../types';
 import OnePartLayout from "../../template/OnePart";
+import getVOCsReportData from "../../../utils";
 
 const Box = styled.span`
   padding: 0 30px;
@@ -30,35 +31,28 @@ interface Props {
 };
 
 const VOCs = ({ close, clickToSearch }: Props) => {
-  const [VOCsData, setVOCsData] = useState<Array<T.ChemicalData>>();
-  const getData = () => {
-    fetch("/data/2020_VOCs_data_385.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (json) {
-        setVOCsData(json);
-      });
-  };
+  const [VOCsData, setVOCsData] = useState([]);
+  
   useEffect(() => {
-    getData();
+    async function getResult() {
+      try {
+        const res = await getVOCsReportData()
+        setVOCsData(res)
+      } catch (err) {
+        console.error(err)
+      }
+    };
+    getResult();
   }, []);
 
   const title = (
-    <>
+    <h1>
       생리용품 <Box onClick={clickToSearch}>VOCs</Box> 검출결과
-    </>
+    </h1>
   )
 
   const content = (
-    <>
-      {VOCsData && <SelectBox clickToSearch={clickToSearch} ChemicalData={VOCsData} />}
-    </>
+    VOCsData && <SelectBox clickToSearch={clickToSearch} ChemicalData={VOCsData} />
   )
 
   return (

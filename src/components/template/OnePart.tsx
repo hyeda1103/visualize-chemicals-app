@@ -25,14 +25,14 @@ const TitleWrapper = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 70px;
+  font-size: 48px;
   font-weight: 700;
 `;
 
 interface Props {
   close: boolean;
   title: JSX.Element;
-  content: JSX.Element;
+  content: JSX.Element | undefined;
 };
 
 const OnePartLayout = ({ close, title, content }: Props) => {

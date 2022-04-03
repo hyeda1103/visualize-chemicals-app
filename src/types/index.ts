@@ -68,6 +68,11 @@ export interface ChemicalData {
 
 export type KeyOfChemicalData = keyof ChemicalData;
 
+export enum Usage {
+  DISPOSABLE = '일회용',
+  REUSABLE = '다회용'
+}
+
 export interface Option {
   value: string;
   label: string;
@@ -86,3 +91,35 @@ export interface ResultItem {
   min: string;
   max: string;
 }
+
+export interface ResultPerUsage {
+  chemicalName: string,
+  number: {
+    disposableIngredientContent: number,
+    reusableIngredientContent: number
+  },
+  percentage: {
+    disposableIngredientContent: string,
+    reusableIngredientContent: string,
+  },
+  mean: {
+    disposableIngredientContent: string,
+    reusableIngredientContent: string
+  },
+  median: {
+    disposableIngredientContent: string,
+    reusableIngredientContent: string
+  },
+  SD: {
+    disposableIngredientContent: string,
+    reusableIngredientContent: string
+  },
+  min: {
+    disposableIngredientContent: string,
+    reusableIngredientContent: string
+  },
+  max: {
+    disposableIngredientContent: string,
+    reusableIngredientContent: string
+  },
+};

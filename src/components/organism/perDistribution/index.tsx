@@ -1,4 +1,6 @@
 import React, { useState, useEffect, MouseEvent } from "react";
+
+import getVOCsReportData from "../../../utils";
 import OnePartLayout from "../../template/OnePart";
 import Result from "./Result";
 
@@ -12,33 +14,24 @@ interface Props {
 
 const VOCs = ({ close, clickToSearch }: Props) => {
   const [VOCsData, setVOCsData] = useState([]);
-  const getData = () => {
-    fetch("/data/2020_VOCs_data_385.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (json) {
-        setVOCsData(json);
-      });
-  };
+  
   useEffect(() => {
-    getData();
+    async function getResult() {
+      try {
+        const res = await getVOCsReportData()
+        setVOCsData(res)
+      } catch (err) {
+        console.error(err)
+      }
+    };
+    getResult();
   }, []);
   
   const title = (
-    <>
-      국내유통 vs 해외직구
-    </>
+    <h1>국내유통 vs 해외직구</h1>
   )
   const content = (
-    <>
-      {VOCsData && <Result clickToSearch={clickToSearch} data={VOCsData} />}
-    </>
+    VOCsData && <Result clickToSearch={clickToSearch} data={VOCsData} />
   )
 
   return (
