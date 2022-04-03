@@ -1,6 +1,6 @@
 # Visualize Chemical Monitoring Results
 
-- Check demo (currently in progress) on the following link: [https://serene-wing-559567.netlify.app/](https://serene-wing-559567.netlify.app/) 
+- Preview demo (currently in progress) on the following link: [https://serene-wing-559567.netlify.app/](https://serene-wing-559567.netlify.app/)
 - Check project status board on the following link: [https://github.com/hyeda1103/visualize-chemicals-app/projects/1](https://github.com/hyeda1103/visualize-chemicals-app/projects/1)
 
 ## Table of contents
@@ -34,7 +34,7 @@ $ yarn start
 - This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) with TypeScript.
 - Used dependencies and versions can be found in `package.json` in the project root.
   - `styled-components` for styling
-  - `Redux` for state management 
+  - `Redux` for state management
 
 ## Status
 
