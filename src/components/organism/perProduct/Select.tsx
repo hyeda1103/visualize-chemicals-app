@@ -60,7 +60,7 @@ interface Props {
   ChemicalData: Array<T.ChemicalData>;
 };
 
-const SelectBox = ({ clickToSearch, ChemicalData }: Props) => {
+function SelectBox({ clickToSearch, ChemicalData }: Props) {
   const [Options, setOptions] = useState<{
     DistributionOpts: (OptionTypeBase | GroupTypeBase<OptionTypeBase>)[] | undefined,
     CompanyOpts: (OptionTypeBase | GroupTypeBase<OptionTypeBase>)[] | undefined,

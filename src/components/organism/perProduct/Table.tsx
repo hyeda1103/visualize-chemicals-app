@@ -72,7 +72,7 @@ interface Props {
   };
 };
 
-const Table = ({ chemicalData, chemicalInfo, clickToSearch }: Props) => {
+function Table({ chemicalData, chemicalInfo, clickToSearch }: Props) {
   const [chemicalList, setChemicalList] = useState<Array<[string, string | number]>>([]);
   const [table, setTable] = useState<Array<T.ResultPerProduct>>([]);
 

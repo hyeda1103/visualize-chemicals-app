@@ -11,7 +11,7 @@ interface Props {
   };
 };
 
-const VOCs = ({ close, clickToSearch }: Props) => {
+function VOCs({ close, clickToSearch }: Props) {
   return (
     <VOCsPerUsage close={close} clickToSearch={clickToSearch} />
   );

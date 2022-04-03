@@ -30,7 +30,7 @@ interface Props {
   };
 };
 
-const VOCs = ({ close, clickToSearch }: Props) => {
+function VOCsPerProduct ({ close, clickToSearch }: Props) {
   const [VOCsData, setVOCsData] = useState([]);
   
   useEffect(() => {
@@ -64,4 +64,4 @@ const VOCs = ({ close, clickToSearch }: Props) => {
   );
 };
 
-export default VOCs;
+export default VOCsPerProduct;

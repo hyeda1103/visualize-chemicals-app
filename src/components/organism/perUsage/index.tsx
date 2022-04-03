@@ -14,7 +14,7 @@ interface Props {
   };
 };
 
-const VOCsPerUsage = ({ close, clickToSearch }: Props) => {
+function VOCsPerUsage({ close, clickToSearch }: Props) {
   const [VOCsData, setVOCsData] = useState([]);
   
   useEffect(() => {

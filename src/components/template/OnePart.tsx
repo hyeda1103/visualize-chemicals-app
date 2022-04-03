@@ -35,7 +35,7 @@ interface Props {
   content: JSX.Element | undefined;
 };
 
-const OnePartLayout = ({ close, title, content }: Props) => {
+function OnePartLayout({ close, title, content }: Props) {
   return (
     <Section>
       <Inner close={close}>

@@ -1,22 +1,6 @@
 import React from 'react'
-import styled, {keyframes} from "styled-components"
+import styled, { keyframes } from "styled-components"
 
-const Loading = () => {
-    return (
-        <Section>
-            <Gooey>
-                <Dot />
-                <Dots>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </Dots>
-            </Gooey>
-        </Section>
-    )
-}
-
-export default Loading
 
 const Section = styled.section`
     position: absolute;
@@ -80,3 +64,19 @@ const Dots = styled.div`
     }
 `
 
+function Loading () {
+    return (
+        <Section>
+            <Gooey>
+                <Dot />
+                <Dots>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </Dots>
+            </Gooey>
+        </Section>
+    )
+}
+
+export default Loading
