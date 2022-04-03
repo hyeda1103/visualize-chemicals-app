@@ -66,11 +66,23 @@ export interface ChemicalData {
   "1-부탄올": string;
 };
 
+export type KeyOfChemicalData = keyof ChemicalData;
+
 export interface Option {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 export interface StringObj {
   [index: string]: string | number;
 };
+
+export interface ResultItem {
+  chemicalName: string;
+  target: string | number;
+  mean: string;
+  median: string;
+  SD: string;
+  min: string;
+  max: string;
+}

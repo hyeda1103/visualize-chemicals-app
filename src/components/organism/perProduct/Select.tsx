@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
-import ReactSelect, { ActionMeta, GroupTypeBase, OptionTypeBase, StylesConfig } from "react-select";
+import ReactSelect, { ActionMeta, StylesConfig, OptionTypeBase, GroupTypeBase } from "react-select";
 import Result from "./Result";
+
 import * as T from "../../../types";
 
 const customStyles: StylesConfig<OptionTypeBase, false> = {
@@ -177,11 +178,13 @@ const SelectBox = ({ clickToSearch, ChemicalData }: Props) => {
           })}
         />
       </SelectWrapper>
-      {result && <Result
-        clickToSearch={clickToSearch}
-        data={ChemicalData}
-        searchResult={result}
-      />}
+      {result && (
+        <Result
+          clickToSearch={clickToSearch}
+          data={ChemicalData}
+          searchResult={result}
+        />
+      )}
     </>
   );
 };

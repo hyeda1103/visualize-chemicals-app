@@ -1,9 +1,8 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 import styled from "styled-components";
 import Table from "./Table";
+
 import * as T from '../../../types';
-
-
 
 const ResultWrapper = styled.section`
   width: 960px;
@@ -36,55 +35,49 @@ interface Props {
   };
 };
 
-const Result = ({ data, searchResult, clickToSearch }: Props) => {
+function Result ({ data, searchResult, clickToSearch }: Props) {
   const [distribution, setDistribution] = useState<string | undefined>("");
   const [company, setCompany] = useState<string | undefined>("");
   const [product, setProduct] = useState<string | undefined>("");
-  const [chemicalInfo, setChemicalInfo] = useState<T.StringObj | undefined>(
-    undefined
-  );
+  const [chemicalInfo, setChemicalInfo] = useState<T.StringObj>({});
 
   useEffect(() => {
-    if (searchResult) {
-      let FoundVOCsInfo = Object.entries(searchResult).filter(
-        (el) =>
-          el[0] !== "index" &&
-          el[0] !== "distribution" &&
-          el[0] !== "usage" &&
-          el[0] !== "company" &&
-          el[0] !== "productName" &&
-          el[1] !== "0"
-      );
+    if (searchResult === undefined) return;
+    const FoundVOCsInfo = Object.entries(searchResult).filter(
+      (el) =>
+        el[0] !== "index" &&
+        el[0] !== "distribution" &&
+        el[0] !== "usage" &&
+        el[0] !== "company" &&
+        el[0] !== "productName" &&
+        el[1] !== "0"
+    );
 
-      const resultObj: T.StringObj = {};
-      FoundVOCsInfo.map((el) => (resultObj[el[0]] = el[1]));
-      setChemicalInfo(resultObj);
-      setCompany(searchResult.company);
-      setProduct(searchResult.productName);
-      setDistribution(searchResult.distribution);
-    }
+    const ResultObj = Object.fromEntries(FoundVOCsInfo);
+    setChemicalInfo(ResultObj);
+    setCompany(searchResult.company);
+    setProduct(searchResult.productName);
+    setDistribution(searchResult.distribution);
   }, [searchResult]);
 
   return (
-    <ResultWrapper>
-      {searchResult && chemicalInfo ? (
+    (searchResult && chemicalInfo) && (
+      <ResultWrapper>
         <Paragraph>
           2020년 12월 식약처에서 총 385개의 생리용품에 대한 60종의 VOCs 모니터링
           결과를 공개했다. 그에 따르면
           <HighlightBox>
-            {distribution}한 {company}의 {product}에서 {Object.entries(chemicalInfo).length}종의 VOCs가 검출
+            {distribution}한 {company}의 {product}에서 {Object.keys(chemicalInfo).length}종의 VOCs가 검출
           </HighlightBox>
           되었다.
         </Paragraph>
-      ) : null}
-      {chemicalInfo ? (
         <Table
-          data={data}
+          chemicalData={data}
           chemicalInfo={chemicalInfo}
           clickToSearch={clickToSearch}
         />
-      ) : null}
-    </ResultWrapper>
+      </ResultWrapper>
+    )
   );
 };
 

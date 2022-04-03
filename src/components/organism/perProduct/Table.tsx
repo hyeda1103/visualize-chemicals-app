@@ -61,8 +61,8 @@ const Box = styled.span`
 `;
 
 interface Props {
-  data: Array<T.ChemicalData>;
-  chemicalInfo?: T.StringObj;
+  chemicalData: Array<T.ChemicalData>;
+  chemicalInfo: T.StringObj | undefined;
   clickToSearch: (e: MouseEvent<HTMLElement>) => {
     type: "dictionay/SEARCH";
     payload: {
@@ -71,48 +71,45 @@ interface Props {
   };
 };
 
-const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
-  const [chemicalList, setChemicalList] = useState<Array<string>>([]);
-  const table: T.StringObj[][] = [];
+const Table = ({ chemicalData, chemicalInfo, clickToSearch }: Props) => {
+  const [chemicalList, setChemicalList] = useState<Array<[string, string | number]>>([]);
+  const [table, setTable] = useState<Array<T.ResultItem>>([]);
 
   useEffect(() => {
     if (chemicalInfo) {
-      setChemicalList(Object.keys(chemicalInfo));
+      setChemicalList(Object.entries(chemicalInfo));
     }
   }, [chemicalInfo]);
 
-  // 검출된 화학물질에 대한 통계수치 계산
-  if (chemicalList) {
+  useEffect(() => {
     const tableInfo = chemicalList.map((chemical) => {
-      const detectedPerProduct: Array<number> = [];
-
-      // 모든 생리용품에 대한 화학물질 검출량 추출
-      Object.entries(data).map((product) => {
-        return Object.entries(product[1]).map((arr) =>
-          arr[0] === chemical ? detectedPerProduct.push(Number(arr[1])) : null
-        );
-      });
-
-      // 오름차순으로 정렬
-      detectedPerProduct.sort((a, b) => a - b);
-
+      const chemicalName = chemical[0]
+      const target = chemical[1].toString()
+      
+      const ingredientContent: Array<number> = []
+      
+      chemicalData.forEach((product) => {
+        Object.entries(product).forEach((chemicalInfo) => {
+          if (chemicalInfo[0] === chemicalName) ingredientContent.push(Number(chemicalInfo[1]))
+        })
+      })
+      
       // 해당 화학물질에 대한 평균값 계산
-      const mean = detectedPerProduct
+      const mean = ingredientContent
         .reduce((acc, curr, i, { length }) => {
           return i === length - 1 ? (acc + curr) / length : acc + curr;
         }, 0)
         .toFixed(2);
-
+      
       // 해당 화학물질에 대한 중앙값 계산
       const median = (
-        (detectedPerProduct[Math.floor(detectedPerProduct.length / 2)] +
-          detectedPerProduct[Math.ceil(detectedPerProduct.length / 2)]) /
-        2
+        (ingredientContent[Math.floor(ingredientContent.length / 2)] +
+          ingredientContent[Math.ceil(ingredientContent.length / 2)]) / 2
       ).toFixed(2);
-
+      
       // 해당 화학물질에 대한 표준편차 계산
       const SD = Math.sqrt(
-        detectedPerProduct
+        ingredientContent
           .map((x) => Math.pow(x - Number(mean), 2))
           .reduce((acc, curr, i, { length }) => {
             return i === length - 1 ? (acc + curr) / length : acc + curr;
@@ -120,32 +117,24 @@ const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
       ).toFixed(2);
 
       // 해당 화학물질에 대한 최솟값 계산
-      const min = Math.min(...detectedPerProduct).toFixed(2);
+      const min = Math.min(...ingredientContent).toFixed(2);
 
       // 해당 화학물질에 대한 최댓값 계산
-      const max = Math.max(...detectedPerProduct).toFixed(2);
-
-      // 사용자가 선택한 제품에서 검출된 해당 화학물질의 검출량
-      let target = "";
-
-      if (chemicalInfo) {
-        Object.entries(chemicalInfo).map((arr) =>
-          arr[0] === chemical ? (target += Number(arr[1]).toFixed(2)) : null
-        );
-      }
-
+      const max = Math.max(...ingredientContent).toFixed(2);
+      
       return {
-        chemicalName: chemical,
-        target: target,
-        mean: mean,
-        median: median,
-        SD: SD,
-        min: min,
-        max: max,
-      };
-    });
-    table.push(tableInfo.flat());
-  }
+        chemicalName,
+        target,
+        mean,
+        median,
+        SD,
+        min,
+        max,
+      }
+    })
+    setTable(tableInfo)
+  }, [chemicalList, chemicalData])
+  
 
   return (
     <GridContainer>
@@ -170,23 +159,19 @@ const Table = ({ data, chemicalInfo, clickToSearch }: Props) => {
           <Box onClick={clickToSearch}>최댓값</Box>
         </TD>
       </Row>
-      {table
-        ? table.map((row) =>
-            row.map((el) => (
-              <Row key={el.chemicalName}>
-                <TH>
-                  <Box onClick={clickToSearch}>{el.chemicalName}</Box>
-                </TH>
-                <TD>{el.target}</TD>
-                <TD>{el.mean}</TD>
-                <TD>{el.median}</TD>
-                <TD>{el.SD}</TD>
-                <TD>{el.min}</TD>
-                <TD>{el.max}</TD>
-              </Row>
-            ))
-          )
-        : null}
+      {table.map((el: T.ResultItem) => (
+      <Row key={el.chemicalName}>
+        <TH>
+          <Box onClick={clickToSearch}>{el.chemicalName}</Box>
+        </TH>
+          <TD>{el.target}</TD>
+          <TD>{el.mean}</TD>
+          <TD>{el.median}</TD>
+          <TD>{el.SD}</TD>
+          <TD>{el.min}</TD>
+          <TD>{el.max}</TD>
+      </Row>
+    ))}
     </GridContainer>
   );
 };
