@@ -160,3 +160,11 @@ export interface ResultPerDistribution {
     oversea: string
   },
 };
+
+export interface Term {
+  definition: string,
+  en: string
+  mathematicalExpression: string | null
+  reference: Array<string>
+  term: string
+}

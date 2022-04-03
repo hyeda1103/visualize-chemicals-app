@@ -28,10 +28,6 @@ const Inner = styled.div`
   margin: 0 auto;
 `;
 
-const ResultWrapper = styled.div`
-  margin: 13px 0;
-`;
-
 const KeywordWrapper = styled.div``;
 
 const SearchKeyword = styled.div`
@@ -39,12 +35,6 @@ const SearchKeyword = styled.div`
   font-weight: 700;
   margin-right: 13px;
 `;
-
-const English = styled.div`
-  font-size: 15px;
-`;
-
-const ReferenceWrapper = styled.div``
 
 const Drag = styled.div`
   background: ${({ theme }) => theme.text};
@@ -69,10 +59,8 @@ interface Props {
 };
 
 function Dictionary({ search, close, clickToClose }: Props) {
-  const [termData, setTermData] = useState<T.StringObj[]>([]);
-  const [defintion, setDefinition] = useState("");
-  const [en, setEN] = useState("");
-  const [reference, setReference] = useState<any>([])
+  const [termData, setTermData] = useState<Array<T.Term>>([]);
+  const [searchResult, setSearchResult] = useState<T.Term>();
 
   useEffect(() => {
     async function getResult() {
@@ -85,32 +73,25 @@ function Dictionary({ search, close, clickToClose }: Props) {
     }
     getResult()
   }, [])
-
+  
   useEffect(() => {
-    termData.forEach((el) => {
-      if (el.term === search) {
-        setDefinition(el.definition.toString());
-        setEN(el.en.toString());
-        setReference(el.reference)
-      }
-    });
-  }, [search, termData]);
+    if (!search) return;
+    const result = termData.filter((termItem) => search === termItem.term)[0]
+    setSearchResult(result)
+  }, [search, termData])
 
   return (
     <Section close={close}>
       <Drag onClick={clickToClose}>{close ? "열기" : "닫기"}</Drag>
       <Inner>
-        <KeywordWrapper>
-          용어사전
-          <SearchKeyword>{search}</SearchKeyword>
-          {/* <English>{en}</English> */}
-        </KeywordWrapper>
-        {/* <ResultWrapper>{defintion}</ResultWrapper>
-        {reference.map((item: string, idx: number) => (
-          <ReferenceWrapper key={`${item}${idx}`}>
-            {item}
-          </ReferenceWrapper>
-        ))} */}
+        {searchResult && (
+          <KeywordWrapper>
+            용어사전
+            <SearchKeyword>
+              {searchResult?.term}
+            </SearchKeyword>
+          </KeywordWrapper>
+        )}
       </Inner>
     </Section>
   );
