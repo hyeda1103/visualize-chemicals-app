@@ -74,118 +74,121 @@ const HighlightBox = styled.span`
 `;
 
 interface Props {
-  data: Array<T.ChemicalData>;
+  chemicalData: Array<T.ChemicalData>;
   clickToSearch: (e: MouseEvent<HTMLElement>) => {
     type: "dictionay/SEARCH";
     payload: { e: MouseEvent<HTMLElement, globalThis.MouseEvent>; };
   };
 };
 
-const Result = ({ data, clickToSearch }: Props) => {
-  let domesticN = 0;
-  let overseaN = 0;
-  let VOCsFromDomestic: Array<string> = [];
-  let VOCsFromOverseas: Array<string> = [];
+function Result({ chemicalData, clickToSearch }: Props) {
+  const [domesticProducts, setDomesticProducts] = useState<Array<T.ChemicalData>>()
+  const [overseaProducts, setOverseaProducts] = useState<Array<T.ChemicalData>>()
+  const [NumOfDomesticProducts, setNumOfDomesticProducts] = useState<number>()
+  const [NumOfOverseaProducts, setNumOfOverseaProducts] = useState<number>()
+  const [PercentOfDomesticProducts, setPercentOfDomesticProducts] = useState<string>()
+  const [PercentOfOverseaProducts, setPercentOfOverseaProducts] = useState<string>()
+  const [VOCsFromDomesticProducts, setVOCsFromDomesticProducts] = useState<Array<string>>([])
+  const [VOCsFromOverseaProducts, setVOCsFromOverseaProducts] = useState<Array<string>>([])
 
-  const [click, setClick] = useState<boolean>(false);
+  const [OnlyInDomesticProducts, setOnlyInDomesticProducts] = useState<Array<string>>([])
+  const [OnlyInOverseaProducts, setOnlyInOverseaProducts] = useState<Array<string>>([])
+  const [DetectedOnBoth, setDetectedOnBoth] = useState<Array<string>>([])
   const [show, setShow] = useState<boolean>(false);
 
-  const handleToggle = () => setClick(!click);
+  const handleToggle = () => setShow(!show);
+  
+  useEffect(() => {
+    const domesticProducts = chemicalData.filter((product) => product.distribution === T.Distribution.DOMESTIC)
+    setDomesticProducts(domesticProducts)
+    const overseaProducts = chemicalData.filter((product) => product.distribution === T.Distribution.OVERSEA)
+    setOverseaProducts(overseaProducts)
+    setNumOfDomesticProducts(domesticProducts.length)
+    setNumOfOverseaProducts(overseaProducts.length)    
+  }, [chemicalData])
+  
+  useEffect(() => {
+    if (NumOfDomesticProducts === undefined) return;
+    if (NumOfOverseaProducts === undefined) return;
+    const percentageOfDisposableProducts = ((NumOfDomesticProducts / (NumOfDomesticProducts + NumOfOverseaProducts)) * 100).toFixed(2)
+    const percentageOfReuableProducts = ((NumOfOverseaProducts / (NumOfDomesticProducts + NumOfOverseaProducts)) * 100).toFixed(2)
+
+    setPercentOfDomesticProducts(`${percentageOfDisposableProducts}%`)
+    setPercentOfOverseaProducts(`${percentageOfReuableProducts}%`)
+  }, [NumOfDomesticProducts, NumOfOverseaProducts])
+  
+  useEffect(() => {
+    if (domesticProducts === undefined) return;
+    if (overseaProducts === undefined) return;
+    domesticProducts.forEach((product) => {
+      const chemicalInfo = Object.entries(product) 
+      chemicalInfo.forEach((singleChemical) => {
+        const chemicalName = singleChemical[0]
+        const ingredientContent = Number(singleChemical[1])
+        if (!['index', 'distribution', 'company', 'productName', 'usage'].includes(chemicalName)
+          && ingredientContent > 0 && VOCsFromDomesticProducts.indexOf(chemicalName) === -1) {
+          setVOCsFromDomesticProducts([...VOCsFromDomesticProducts, chemicalName])
+        }
+      })
+    })
+    overseaProducts.forEach((product) => {
+      const chemicalInfo = Object.entries(product) 
+      chemicalInfo.forEach((singleChemical) => {
+        const chemicalName = singleChemical[0]
+        const ingredientContent = Number(singleChemical[1])
+        if (!['index', 'distribution', 'company', 'productName', 'usage'].includes(chemicalName)
+          && ingredientContent > 0 && VOCsFromOverseaProducts.indexOf(chemicalName) === -1) {
+          setVOCsFromOverseaProducts([...VOCsFromOverseaProducts, chemicalName])
+        }
+      })
+    })
+  }, [domesticProducts, overseaProducts, VOCsFromDomesticProducts, VOCsFromOverseaProducts])
 
   useEffect(() => {
-    click ? setShow(true) : setShow(false);
-  }, [click]);
-
-  data.map((product) =>
-    product.distribution === "국내유통" ? domesticN++ : overseaN++
-  );
-
-  for (let i = 0; i < data.length; i++) {
-    let product = data[i];
-    if (product.distribution === "국내유통") {
-      let arr = Object.entries(product);
-      for (let i = 0; i < arr.length; i++) {
-        let key = arr[i][0];
-        let value = arr[i][1];
-        if (value !== "0") {
-          if (
-            key !== "index" &&
-            key !== "distribution" &&
-            key !== "company" &&
-            key !== "productName" &&
-            key !== "usage"
-          ) {
-            VOCsFromDomestic.push(key);
-          }
-        }
-      }
-    } else {
-      let arr = Object.entries(product);
-      for (let i = 0; i < arr.length; i++) {
-        let key = arr[i][0];
-        let value = arr[i][1];
-        if (value !== "0") {
-          if (
-            key !== "index" &&
-            key !== "distribution" &&
-            key !== "company" &&
-            key !== "productName" &&
-            key !== "usage"
-          ) {
-            VOCsFromOverseas.push(key);
-          }
-        }
-      }
-    }
-  }
-
-  VOCsFromDomestic = VOCsFromDomestic.filter(
-    (v, i, arr) => arr.indexOf(v) === i
-  );
-  VOCsFromOverseas = VOCsFromOverseas.filter(
-    (v, i, arr) => arr.indexOf(v) === i
-  );
-
-  // 국내유통 생리용품에서만 검출된 VOCs
-  let OnlyInDomestic = VOCsFromDomestic.filter(
-    (x) => !VOCsFromOverseas.includes(x)
-  );
-  // 해외직구 생리용품에서만 검출된 VOCs
-  let OnlyInOverseas = VOCsFromOverseas.filter(
-    (x) => !VOCsFromDomestic.includes(x)
-  );
-  // 일외용과 해외직구 모두에서 검출된 VOCs
-  let DetectedInBoth = VOCsFromDomestic.filter((x) =>
-    VOCsFromOverseas.includes(x)
-  );
-
+    // 국내유통 생리용품에서만 검출된 VOCs
+    const OnlyInDomestic = VOCsFromDomesticProducts.filter(
+      (x) => !VOCsFromOverseaProducts.includes(x)
+    );
+    setOnlyInDomesticProducts(OnlyInDomestic)
+    // 해외직구 생리용품에서만 검출된 VOCs
+    const OnlyInOversea = VOCsFromOverseaProducts.filter(
+      (x) => !VOCsFromDomesticProducts.includes(x)
+    );
+    setOnlyInOverseaProducts(OnlyInOversea)
+    // 국내유통과 해외직구 생리용품 모두에서 검출된 VOCs
+    const DetectedOnBoth = VOCsFromDomesticProducts.filter((x) =>
+      VOCsFromOverseaProducts.includes(x)
+    );
+    setDetectedOnBoth(DetectedOnBoth)
+  }, [VOCsFromDomesticProducts, VOCsFromOverseaProducts])
+  
   return (
     <ResultWrapper>
       <Paragraph>
         2020년 12월 식약처에서 모니터링한 총 385개의 생리용품 가운데 국내유통은{" "}
-        {domesticN}개로 전체의{" "}
-        {`${((domesticN / (domesticN + overseaN)) * 100).toFixed(2)}%`},
-        해외직구은 {overseaN}개로 전체의{" "}
-        {`${((overseaN / (domesticN + overseaN)) * 100).toFixed(2)}%`}을
+        {NumOfDomesticProducts}개로 전체의{" "}
+        {PercentOfDomesticProducts},
+        해외직구은 {NumOfOverseaProducts}개로 전체의{" "}
+        {PercentOfOverseaProducts}을
         차지했다. 모니터링 대상이었던 총 60종의 VOCs 가운데
         <HighlightBox>
-          국내유통 생리용품에서 검출된 VOCs는 총 {VOCsFromDomestic.length}종,
-          해외직구 생리용품에서 검출된 VOCs는 총 {VOCsFromOverseas.length}종이었다.
+          국내유통 생리용품에서 검출된 VOCs는 총 {VOCsFromDomesticProducts.length}종,
+          해외직구 생리용품에서 검출된 VOCs는 총 {VOCsFromOverseaProducts.length}종이었다.
           이 가운데 국내유통과 해외직구 모두에서 검출된 VOCs는{" "}
-          {DetectedInBoth.length}종, 국내유통에서만 검출된 VOCs는{" "}
-          {OnlyInDomestic.length}종, 해외직구에서만 검출된 VOCs는{" "}
-          {OnlyInOverseas.length}종
+          {DetectedOnBoth.length}종, 국내유통에서만 검출된 VOCs는{" "}
+          {OnlyInDomesticProducts.length}종, 해외직구에서만 검출된 VOCs는{" "}
+          {OnlyInOverseaProducts.length}종
         </HighlightBox>
         으로 나타났다.
       </Paragraph>
       <TableTitle onClick={handleToggle}>
         <Toggle onClick={handleToggle} show={show} /> [표] 국내유통과 해외직구
-        생리용품에서 모두 검출된 {DetectedInBoth.length}종의 VOCs에 대한 통계
+        생리용품에서 모두 검출된 {DetectedOnBoth.length}종의 VOCs에 대한 통계
       </TableTitle>
       <TableBody show={show}>
         <Table
-          data={data}
-          detectedInBoth={DetectedInBoth}
+          chemicalData={chemicalData}
+          detectedOnBoth={DetectedOnBoth}
           clickToSearch={clickToSearch}
         />
       </TableBody>

@@ -1,6 +1,8 @@
 import React, { useState, MouseEvent, useEffect } from "react";
 import styled from "styled-components";
+
 import * as T from '../../../types'
+import { Max, Mean, Median, Min, SD } from "../../../utils";
 
 
 const GridContainer = styled.section`
@@ -145,7 +147,7 @@ function Table({ chemicalData, detectedOnBoth, clickToSearch }: Props) {
             const ingredientContent = Number(chemicalInfo[1])
             if (chemicalName === chemicalDetected && ingredientContent > 0) disposableIngredientContent.push(ingredientContent)
           })
-        } else {
+        } else if (product.usage === T.Usage.REUSABLE) {
           Object.entries(product).forEach((chemicalInfo) => {
             const chemicalName = chemicalInfo[0]
             const ingredientContent = Number(chemicalInfo[1])
@@ -162,88 +164,54 @@ function Table({ chemicalData, detectedOnBoth, clickToSearch }: Props) {
       const PercentOfReusable = ((Number(NumOfReusableProducts) / 52) * 100).toFixed(2);
 
       // 해당 화학물질에 대한 평균값 계산
-      const meanOfDisposable = disposableIngredientContent
-        .reduce((acc, curr, i, { length }) => {
-          return i === length - 1 ? (acc + curr) / length : acc + curr;
-        }, 0)
-        .toFixed(2);
-      const meanOfReusable = reusableIngredientContent
-        .reduce((acc, curr, i, { length }) => {
-          return i === length - 1 ? (acc + curr) / length : acc + curr;
-        }, 0)
-        .toFixed(2);
+      const meanOfDisposable = Mean(disposableIngredientContent)
+      const meanOfReusable = Mean(reusableIngredientContent)
 
       // 해당 화학물질에 대한 중앙값 계산
-      const medianOfDisposable =
-        NumOfDisposableProducts !== 1
-          ? (
-              (disposableIngredientContent[Math.floor(NumOfDisposableProducts / 2)] +
-                disposableIngredientContent[Math.ceil(NumOfDisposableProducts / 2)]) /
-              2
-            ).toFixed(2)
-          : disposableIngredientContent[0].toFixed(2);
-      const medianOfReusable =
-        NumOfReusableProducts !== 1
-          ? (
-              (reusableIngredientContent[Math.floor(NumOfReusableProducts / 2)] +
-                reusableIngredientContent[Math.ceil(NumOfReusableProducts / 2)]) /
-              2
-            ).toFixed(2)
-          : reusableIngredientContent[0].toFixed(2);
+      const medianOfDisposable = Median(disposableIngredientContent)
+      const medianOfReusable = Median(reusableIngredientContent)
 
       // 해당 화학물질에 대한 표준편차 계산
-      const SDofDisposable = Math.sqrt(
-        disposableIngredientContent
-          .map((x) => Math.pow(x - Number(meanOfDisposable), 2))
-          .reduce((acc, curr, i, { length }) => {
-            return i === length - 1 ? (acc + curr) / length : acc + curr;
-          }, 0)
-      ).toFixed(2);
-      const SDofReusable = Math.sqrt(
-        reusableIngredientContent
-          .map((x) => Math.pow(x - Number(meanOfReusable), 2))
-          .reduce((acc, curr, i, { length }) => {
-            return i === length - 1 ? (acc + curr) / length : acc + curr;
-          }, 0)
-      ).toFixed(2);
+      const SDofDisposable = SD(disposableIngredientContent, meanOfDisposable)
+      const SDofReusable = SD(reusableIngredientContent, meanOfReusable)
 
       // 해당 화학물질에 대한 최솟값 계산
-      const minOfDisposable = Math.min(...disposableIngredientContent).toFixed(2);
-      const minOfReusable = Math.min(...reusableIngredientContent).toFixed(2);
+      const minOfDisposable = Min(disposableIngredientContent)
+      const minOfReusable = Min(reusableIngredientContent)
 
       // 해당 화학물질에 대한 최댓값 계산
-      const maxOfDisposable = Math.max(...disposableIngredientContent).toFixed(2);
-      const maxOfReusable = Math.max(...reusableIngredientContent).toFixed(2);
+      const maxOfDisposable = Max(disposableIngredientContent)
+      const maxOfReusable = Max(reusableIngredientContent)
 
       return {
         chemicalName: chemicalDetected,
         number: {
-          disposableIngredientContent: NumOfDisposableProducts,
-          reusableIngredientContent: NumOfReusableProducts
+          disposable: NumOfDisposableProducts,
+          reusable: NumOfReusableProducts
         },
         percentage: {
-          disposableIngredientContent: PercentOfDisposable,
-          reusableIngredientContent: PercentOfReusable,
+          disposable: PercentOfDisposable,
+          reusable: PercentOfReusable,
         },
         mean: {
-          disposableIngredientContent: meanOfDisposable,
-          reusableIngredientContent: meanOfReusable
+          disposable: meanOfDisposable,
+          reusable: meanOfReusable
         },
         median: {
-          disposableIngredientContent: medianOfDisposable,
-          reusableIngredientContent: medianOfReusable
+          disposable: medianOfDisposable,
+          reusable: medianOfReusable
         },
         SD: {
-          disposableIngredientContent: SDofDisposable,
-          reusableIngredientContent: SDofReusable
+          disposable: SDofDisposable,
+          reusable: SDofReusable
         },
         min: {
-          disposableIngredientContent: minOfDisposable,
-          reusableIngredientContent: minOfReusable
+          disposable: minOfDisposable,
+          reusable: minOfReusable
         },
         max: {
-          disposableIngredientContent: maxOfDisposable,
-          reusableIngredientContent: maxOfReusable
+          disposable: maxOfDisposable,
+          reusable: maxOfReusable
         },
       };
     })
@@ -278,24 +246,24 @@ function Table({ chemicalData, detectedOnBoth, clickToSearch }: Props) {
           </CH>
           <CD>일회용</CD>
           <CD>
-            {el.number.disposableIngredientContent}{" "}
-            <Percent>({el.percentage.disposableIngredientContent}%)</Percent>
+            {el.number.disposable}{" "}
+            <Percent>({el.percentage.disposable}%)</Percent>
           </CD>
-          <CD>{el.mean.disposableIngredientContent}</CD>
-          <CD>{el.median.disposableIngredientContent}</CD>
-          <CD>{el.SD.disposableIngredientContent}</CD>
-          <CD>{el.min.disposableIngredientContent}</CD>
-          <CD>{el.max.disposableIngredientContent}</CD>
+          <CD>{el.mean.disposable}</CD>
+          <CD>{el.median.disposable}</CD>
+          <CD>{el.SD.disposable}</CD>
+          <CD>{el.min.disposable}</CD>
+          <CD>{el.max.disposable}</CD>
           <CD>다회용</CD>
           <CD>
-            {el.number.reusableIngredientContent}{" "}
-            <Percent>({el.percentage.reusableIngredientContent}%)</Percent>
+            {el.number.reusable}{" "}
+            <Percent>({el.percentage.reusable}%)</Percent>
           </CD>
-          <CD>{el.mean.reusableIngredientContent}</CD>
-          <CD>{el.median.reusableIngredientContent}</CD>
-          <CD>{el.SD.reusableIngredientContent}</CD>
-          <CD>{el.min.reusableIngredientContent}</CD>
-          <CD>{el.max.reusableIngredientContent}</CD>
+          <CD>{el.mean.reusable}</CD>
+          <CD>{el.median.reusable}</CD>
+          <CD>{el.SD.reusable}</CD>
+          <CD>{el.min.reusable}</CD>
+          <CD>{el.max.reusable}</CD>
         </Row>
       ))}
     </GridContainer>

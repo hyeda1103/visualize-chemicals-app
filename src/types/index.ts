@@ -73,6 +73,11 @@ export enum Usage {
   REUSABLE = '다회용'
 }
 
+export enum Distribution {
+  DOMESTIC = '국내유통',
+  OVERSEA = '해외직구'
+}
+
 export interface Option {
   value: string;
   label: string;
@@ -82,7 +87,7 @@ export interface StringObj {
   [index: string]: string | number;
 };
 
-export interface ResultItem {
+export interface ResultPerProduct {
   chemicalName: string;
   target: string | number;
   mean: string;
@@ -95,31 +100,63 @@ export interface ResultItem {
 export interface ResultPerUsage {
   chemicalName: string,
   number: {
-    disposableIngredientContent: number,
-    reusableIngredientContent: number
+    disposable: number,
+    reusable: number
   },
   percentage: {
-    disposableIngredientContent: string,
-    reusableIngredientContent: string,
+    disposable: string,
+    reusable: string,
   },
   mean: {
-    disposableIngredientContent: string,
-    reusableIngredientContent: string
+    disposable: string,
+    reusable: string
   },
   median: {
-    disposableIngredientContent: string,
-    reusableIngredientContent: string
+    disposable: string,
+    reusable: string
   },
   SD: {
-    disposableIngredientContent: string,
-    reusableIngredientContent: string
+    disposable: string,
+    reusable: string
   },
   min: {
-    disposableIngredientContent: string,
-    reusableIngredientContent: string
+    disposable: string,
+    reusable: string
   },
   max: {
-    disposableIngredientContent: string,
-    reusableIngredientContent: string
+    disposable: string,
+    reusable: string
+  },
+};
+
+export interface ResultPerDistribution {
+  chemicalName: string,
+  number: {
+    domestic: number,
+    oversea: number
+  },
+  percentage: {
+    domestic: string,
+    oversea: string,
+  },
+  mean: {
+    domestic: string,
+    oversea: string
+  },
+  median: {
+    domestic: string,
+    oversea: string
+  },
+  SD: {
+    domestic: string,
+    oversea: string
+  },
+  min: {
+    domestic: string,
+    oversea: string
+  },
+  max: {
+    domestic: string,
+    oversea: string
   },
 };

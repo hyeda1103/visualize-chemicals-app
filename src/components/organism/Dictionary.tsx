@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components/macro";
+import styled from "styled-components";
+
 import * as T from '../../types';
-
-
+import { getTermData } from "../../utils";
 interface StyleProps {
   close: boolean;
 };
@@ -68,29 +68,23 @@ interface Props {
   clickToClose: () => void;
 };
 
-const Dictionary = ({ search, close, clickToClose }: Props) => {
+function Dictionary({ search, close, clickToClose }: Props) {
   const [termData, setTermData] = useState<T.StringObj[]>([]);
   const [defintion, setDefinition] = useState("");
   const [en, setEN] = useState("");
   const [reference, setReference] = useState<any>([])
 
-  const getData = () => {
-    fetch("/data/Terminology.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (json) {
-        setTermData(json);
-      });
-  };
   useEffect(() => {
-    getData();
-  }, []);
+    async function getResult() {
+      try {
+        const res = await getTermData()
+        setTermData(res)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    getResult()
+  }, [])
 
   useEffect(() => {
     termData.forEach((el) => {
@@ -109,12 +103,14 @@ const Dictionary = ({ search, close, clickToClose }: Props) => {
         <KeywordWrapper>
           용어사전
           <SearchKeyword>{search}</SearchKeyword>
-          <English>{en}</English>
+          {/* <English>{en}</English> */}
         </KeywordWrapper>
-        <ResultWrapper>{defintion}</ResultWrapper>
+        {/* <ResultWrapper>{defintion}</ResultWrapper>
         {reference.map((item: string, idx: number) => (
-          <ReferenceWrapper key={ `${item}${idx}` }>{ item }</ReferenceWrapper>
-        ))}
+          <ReferenceWrapper key={`${item}${idx}`}>
+            {item}
+          </ReferenceWrapper>
+        ))} */}
       </Inner>
     </Section>
   );

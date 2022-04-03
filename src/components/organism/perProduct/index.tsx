@@ -1,9 +1,9 @@
 import React, { useState, useEffect, MouseEvent } from "react";
-import styled from "styled-components/macro";
+import styled from "styled-components";
 
 import SelectBox from "./Select";
 import OnePartLayout from "../../template/OnePart";
-import getVOCsReportData from "../../../utils";
+import { getVOCsReportData } from "../../../utils";
 
 const Box = styled.span`
   padding: 0 30px;

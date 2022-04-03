@@ -1,7 +1,8 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 import styled from "styled-components";
-import * as T from '../../../types/index';
 
+import * as T from '../../../types';
+import { Max, Mean, Median, Min, SD } from "../../../utils";
 
 const GridContainer = styled.section`
   display: flex;
@@ -73,7 +74,7 @@ interface Props {
 
 const Table = ({ chemicalData, chemicalInfo, clickToSearch }: Props) => {
   const [chemicalList, setChemicalList] = useState<Array<[string, string | number]>>([]);
-  const [table, setTable] = useState<Array<T.ResultItem>>([]);
+  const [table, setTable] = useState<Array<T.ResultPerProduct>>([]);
 
   useEffect(() => {
     if (chemicalInfo) {
@@ -95,39 +96,26 @@ const Table = ({ chemicalData, chemicalInfo, clickToSearch }: Props) => {
       })
       
       // 해당 화학물질에 대한 평균값 계산
-      const mean = ingredientContent
-        .reduce((acc, curr, i, { length }) => {
-          return i === length - 1 ? (acc + curr) / length : acc + curr;
-        }, 0)
-        .toFixed(2);
+      const mean = Mean(ingredientContent)
       
       // 해당 화학물질에 대한 중앙값 계산
-      const median = (
-        (ingredientContent[Math.floor(ingredientContent.length / 2)] +
-          ingredientContent[Math.ceil(ingredientContent.length / 2)]) / 2
-      ).toFixed(2);
+      const median = Median(ingredientContent)
       
       // 해당 화학물질에 대한 표준편차 계산
-      const SD = Math.sqrt(
-        ingredientContent
-          .map((x) => Math.pow(x - Number(mean), 2))
-          .reduce((acc, curr, i, { length }) => {
-            return i === length - 1 ? (acc + curr) / length : acc + curr;
-          }, 0)
-      ).toFixed(2);
+      const StandardDeviation = SD(ingredientContent, median)
 
       // 해당 화학물질에 대한 최솟값 계산
-      const min = Math.min(...ingredientContent).toFixed(2);
+      const min = Min(ingredientContent)
 
       // 해당 화학물질에 대한 최댓값 계산
-      const max = Math.max(...ingredientContent).toFixed(2);
+      const max = Max(ingredientContent)
       
       return {
         chemicalName,
         target,
         mean,
         median,
-        SD,
+        SD: StandardDeviation,
         min,
         max,
       }
@@ -159,7 +147,7 @@ const Table = ({ chemicalData, chemicalInfo, clickToSearch }: Props) => {
           <Box onClick={clickToSearch}>최댓값</Box>
         </TD>
       </Row>
-      {table.map((el: T.ResultItem) => (
+      {table.map((el: T.ResultPerProduct) => (
       <Row key={el.chemicalName}>
         <TH>
           <Box onClick={clickToSearch}>{el.chemicalName}</Box>

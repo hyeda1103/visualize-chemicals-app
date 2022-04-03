@@ -1,7 +1,7 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 import styled from "styled-components";
-import Table from "./Table";
 
+import Table from "./Table";
 import * as T from '../../../types';
 
 const ResultWrapper = styled.section`

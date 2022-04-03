@@ -1,6 +1,6 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 
-import getVOCsReportData from "../../../utils";
+import { getVOCsReportData } from "../../../utils";
 import OnePartLayout from "../../template/OnePart";
 import Result from "./Result";
 
@@ -12,7 +12,7 @@ interface Props {
   };
 };
 
-const VOCs = ({ close, clickToSearch }: Props) => {
+function VOCs({ close, clickToSearch }: Props) {
   const [VOCsData, setVOCsData] = useState([]);
   
   useEffect(() => {
@@ -31,7 +31,7 @@ const VOCs = ({ close, clickToSearch }: Props) => {
     <h1>국내유통 vs 해외직구</h1>
   )
   const content = (
-    VOCsData && <Result clickToSearch={clickToSearch} data={VOCsData} />
+    VOCsData && <Result clickToSearch={clickToSearch} chemicalData={VOCsData} />
   )
 
   return (

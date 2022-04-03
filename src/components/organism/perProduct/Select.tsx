@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
 import ReactSelect, { ActionMeta, StylesConfig, OptionTypeBase, GroupTypeBase } from "react-select";
-import Result from "./Result";
 
+import Result from "./Result";
 import * as T from "../../../types";
 
 const customStyles: StylesConfig<OptionTypeBase, false> = {

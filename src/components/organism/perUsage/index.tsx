@@ -1,6 +1,6 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 
-import getVOCsReportData from "../../../utils";
+import { getVOCsReportData } from "../../../utils";
 import OnePartLayout from "../../template/OnePart";
 import Result from "./Result";
 
