@@ -61,6 +61,7 @@ interface Props {
 function Dictionary({ search, close, clickToClose }: Props) {
   const [termData, setTermData] = useState<Array<T.Term>>([]);
   const [searchResult, setSearchResult] = useState<T.Term>();
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     async function getResult() {
@@ -77,21 +78,25 @@ function Dictionary({ search, close, clickToClose }: Props) {
   useEffect(() => {
     if (!search) return;
     const result = termData.filter((termItem) => search === termItem.term)[0]
-    setSearchResult(result)
+    if (result) {
+      setErrorMessage('')
+      setSearchResult(result)
+    } else {
+      setSearchResult(undefined)
+      setErrorMessage('아직 등록되지 않은 용어입니다')
+    }
   }, [search, termData])
 
   return (
     <Section close={close}>
       <Drag onClick={clickToClose}>{close ? "열기" : "닫기"}</Drag>
       <Inner>
-        {searchResult && (
-          <KeywordWrapper>
-            용어사전
-            <SearchKeyword>
-              {searchResult?.term}
-            </SearchKeyword>
-          </KeywordWrapper>
-        )}
+        <KeywordWrapper>
+          용어사전
+          <SearchKeyword>
+            {searchResult?.term ? searchResult?.term : errorMessage}
+          </SearchKeyword>
+        </KeywordWrapper>
       </Inner>
     </Section>
   );
